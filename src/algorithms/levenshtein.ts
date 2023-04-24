@@ -4,7 +4,7 @@
  * @param str2 The second string.
  * @returns The similarity between the two strings as a number between 0 and 1.
  */
-function levenshtein(str1: string, str2: string): number {
+export default function levenshtein(str1: string, str2: string): number {
   // Step 1: Initialize the matrix with the Levenshtein distance between each prefix of str1 and each prefix of str2.
   const m = str1.length;
   const n = str2.length;

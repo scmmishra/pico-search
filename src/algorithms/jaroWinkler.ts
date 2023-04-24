@@ -4,7 +4,7 @@
  * @param b The second string to compare.
  * @returns A floating-point number between 0 and 1, where 0 means the strings are completely dissimilar and 1 means they are identical.
  */
-function jaroWinkler(a: string, b: string): number {
+export default function jaroWinkler(a: string, b: string): number {
   // Jaro distance
   const m: boolean[] = []; // match flags
   let matches = 0;
