@@ -1,0 +1,11 @@
+export { startTests } from '@vitest/runner';
+export { s as setupCommonEnv } from './chunk-runtime-setup.5d504677.js';
+export { s as setupSnapshotEnvironment } from './chunk-snapshot-env.a347d647.js';
+export { g as getCoverageProvider, a as startCoverageInsideWorker, s as stopCoverageInsideWorker, t as takeCoverageInsideWorker } from './chunk-integrations-coverage.d93ee824.js';
+import '@vitest/utils';
+import './chunk-integrations-run-once.ea614f17.js';
+import './chunk-utils-env.6b856dbf.js';
+import 'pathe';
+import 'std-env';
+import '@vitest/runner/utils';
+import './chunk-utils-global.fd174983.js';
