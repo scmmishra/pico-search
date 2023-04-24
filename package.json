@@ -1,5 +1,5 @@
 {
-  "name": "pico-search",
+  "name": "@scmmishra/pico-search",
   "description": "A tiny fuzzy search engine",
   "version": "0.0.1",
   "license": "MIT",
