@@ -9,7 +9,7 @@
 
 ![DeepSource](https://deepsource.io/gh/scmmishra/pico-search.svg/?label=active+issues&show_trend=true&token=_HAIDwNbi1ocMhaBKxB_BcSQ)
 ![DeepSource](https://deepsource.io/gh/scmmishra/pico-search.svg/?label=resolved+issues&show_trend=true&token=_HAIDwNbi1ocMhaBKxB_BcSQ)
-![Less than 400B](https://deno.bundlejs.com/?q=pico-search&badge)
+![Less than 400B](https://deno.bundlejs.com/?q=@scmmishra/pico-search&badge)
 
   <p>
 
@@ -20,15 +20,15 @@ PicoSearch is a lightweight fuzzy search JavaScript library that provides develo
 ## Installation
 
 ```sh
-pnpm install pico-search
+pnpm install @scmmishra/pico-search
 ```
 
 ```sh
-npm install pico-search
+npm install @scmmishra/pico-search
 ```
 
 ```sh
-yarn install pico-search
+yarn install @scmmishra/pico-search
 ```
 
 ## Usage
