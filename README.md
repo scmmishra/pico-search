@@ -12,8 +12,6 @@
 ![DeepSource](https://deepsource.io/gh/scmmishra/pico-search.svg/?label=resolved+issues&show_trend=true&token=_HAIDwNbi1ocMhaBKxB_BcSQ)
 ![Less than 400B](https://deno.bundlejs.com/?q=@scmmishra/pico-search&badge)
 
-  <p>
-
 </div>
 
 PicoSearch is a lightweight fuzzy search JavaScript library that provides developers with an easy-to-use, efficient way to perform fuzzy searches on arrays of objects. It offers two algorithms, the Levenshtein distance algorithm and the Jaro-Winkler distance algorithm, and allows for weighting of search keys. PicoSearch is designed to be simple to use and integrate into any project, making it an excellent choice for developers looking for a fast, lightweight search solution.
@@ -34,7 +32,7 @@ yarn add @scmmishra/pico-search
 
 ## Usage
 
-PicoSearch exposes a single function: `picoSearch()`. This function takes an array of objects, a search term, an array of keys to search against, and an optional algorithm argument. It returns an array of objects that match the search term.
+PicoSearch exposes a single function: `picoSearch()`. This function takes an array of objects, a search term, an array of keys to search against, and an optional algorithm argument. It returns an array of objects that match the search term. You can find the [typedoc here](https://paka.dev/npm/@scmmishra/pico-search/api)
 
 ```typescript
 import { picoSearch } from "picosearch";
