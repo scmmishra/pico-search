@@ -28,7 +28,7 @@ npm install @scmmishra/pico-search
 ```
 
 ```sh
-yarn install @scmmishra/pico-search
+yarn add @scmmishra/pico-search
 ```
 
 ## Usage
