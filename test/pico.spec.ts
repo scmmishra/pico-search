@@ -17,7 +17,7 @@ describe("picoSearch", () => {
     expect(picoSearch(objects, "", ["name"])).toEqual(objects);
   });
 
-  it.only("should return objects that match the searchTerm", () => {
+  it("should return objects that match the searchTerm", () => {
     expect(picoSearch(objects, "John", ["name"])).toEqual([
       { name: "John Doe", age: 25, city: "New York" },
     ]);
