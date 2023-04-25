@@ -34,9 +34,9 @@ describe("picoSearch", () => {
       { name: "Jane Smith", age: 35, city: "San Francisco" },
       { name: "Bob Johnson", age: 45, city: "Los Angeles" },
     ];
-    expect(picoSearch(objects, "ohn", ["name"], "jaroWinkler")).toEqual(
-      expected
-    );
+    expect(
+      picoSearch(objects, "ohn", ["name"], { algorithm: "jaroWinkler" })
+    ).toEqual(expected);
   });
 
   it("should take into account weights for different keys", () => {
@@ -57,8 +57,8 @@ describe("picoSearch", () => {
       { name: "Jane Smith", age: 35, city: "San Francisco" },
     ];
 
-    expect(picoSearch(objects, "John", ["name"], "jaroWinkler")).toEqual(
-      expected
-    );
+    expect(
+      picoSearch(objects, "John", ["name"], { algorithm: "jaroWinkler" })
+    ).toEqual(expected);
   });
 });

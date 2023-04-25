@@ -15,9 +15,12 @@ export function picoSearch<T>(
   objectsArray: T[],
   searchTerm: string,
   keys: Keys,
-  algorithm: SearchAlgorithm = "levenshtein"
+  config?: { algorithm?: SearchAlgorithm; threshold?: number }
 ): T[] {
   const results: SearchResult<T>[] = [];
+
+  const algorithm = config?.algorithm || "levenshtein";
+  const threshold = config?.threshold || 0.3;
 
   if (!searchTerm) {
     return objectsArray;
@@ -52,7 +55,7 @@ export function picoSearch<T>(
 
     const distanceForObject = weightedAverage(distanceScores, weightsInOrder);
 
-    if (distanceForObject >= 0.3) {
+    if (distanceForObject >= threshold) {
       results.push({
         object: obj,
         distance: distanceForObject,
