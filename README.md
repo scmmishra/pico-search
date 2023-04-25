@@ -2,6 +2,7 @@
 <br>
 <br>
 <p>
+  <img src=".github/mascot.png" style="height: 150px;">
   <h1>pico-search</h1>
 </p>
 <br>
