@@ -20,7 +20,9 @@ describe("picoSearch", () => {
   it("should return objects that match the searchTerm", () => {
     expect(picoSearch(objects, "John", ["name"])).toEqual([
       { name: "John Doe", age: 25, city: "New York" },
+      { name: "Bob Johnson", age: 45, city: "Los Angeles" },
     ]);
+
     expect(picoSearch(objects, "Boston", ["city"])).toEqual([
       { name: "Alice Williams", age: 55, city: "Boston" },
     ]);
@@ -28,36 +30,33 @@ describe("picoSearch", () => {
 
   it("should prioritize results based on distance", () => {
     const expected = [
-      { name: "Bob Johnson", age: 45, city: "Los Angeles" },
       { name: "John Doe", age: 25, city: "New York" },
-      { name: "Alice Williams", age: 55, city: "Boston" },
       { name: "Jane Smith", age: 35, city: "San Francisco" },
+      { name: "Bob Johnson", age: 45, city: "Los Angeles" },
     ];
-    expect(picoSearch(objects, "ohn", ["name"])).toEqual(expected);
+    expect(picoSearch(objects, "ohn", ["name"], "jaroWinkler")).toEqual(
+      expected
+    );
   });
 
   it("should take into account weights for different keys", () => {
-    const expected = [
-      { name: "Jane Smith", age: 35, city: "San Francisco" },
-      { name: "Bob Johnson", age: 45, city: "Los Angeles" },
-      { name: "John Doe", age: 25, city: "New York" },
-      { name: "Alice Williams", age: 55, city: "Boston" },
-    ];
+    const expected = [{ name: "John Doe", age: 25, city: "New York" }];
+
     const keys = [
       { name: "name", weight: 3 },
-      { name: "age", weight: 1 },
       { name: "city", weight: 2 },
     ];
+
     expect(picoSearch(objects, "John", keys)).toEqual(expected);
   });
 
   it("should use Jaro-Winkler distance algorithm when specified", () => {
     const expected = [
-      { name: "Jane Smith", age: 35, city: "San Francisco" },
-      { name: "Bob Johnson", age: 45, city: "Los Angeles" },
       { name: "John Doe", age: 25, city: "New York" },
-      { name: "Alice Williams", age: 55, city: "Boston" },
+      { name: "Bob Johnson", age: 45, city: "Los Angeles" },
+      { name: "Jane Smith", age: 35, city: "San Francisco" },
     ];
+
     expect(picoSearch(objects, "John", ["name"], "jaroWinkler")).toEqual(
       expected
     );

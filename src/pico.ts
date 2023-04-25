@@ -19,6 +19,10 @@ export function picoSearch<T>(
 ): T[] {
   const results: SearchResult<T>[] = [];
 
+  if (!searchTerm) {
+    return objectsArray;
+  }
+
   objectsArray.forEach((obj) => {
     const distanceScores: number[] = [];
     const weightsInOrder: number[] = [];
@@ -48,7 +52,7 @@ export function picoSearch<T>(
 
     const distanceForObject = weightedAverage(distanceScores, weightsInOrder);
 
-    if (distanceForObject >= 0.5) {
+    if (distanceForObject >= 0.3) {
       results.push({
         object: obj,
         distance: distanceForObject,
