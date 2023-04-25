@@ -64,7 +64,9 @@ console.log(results); // [{ name: "Alice", age: 25 }]
 PicoSearch supports two search algorithms: the Levenshtein distance algorithm and the Jaro-Winkler distance algorithm. The default algorithm is Levenshtein. To specify a different algorithm, pass either `"levenshtein"` or `"jaroWinkler"` as the fourth argument to `picoSearch()`.
 
 ```typescript
-const results = picoSearch(people, searchTerm, keys, "jaroWinkler");
+const results = picoSearch(people, searchTerm, keys, {
+  algorithm: "jaroWinkler",
+});
 ```
 
 ### Weighted Keys
@@ -76,6 +78,17 @@ const keys = [{ name: "name", weight: 2 }, "age"];
 ```
 
 Weights are relative, so a key with a weight of 2 will be considered twice as important as a key with a weight of 1.
+
+### Minimum Distance Threshold
+
+PicoSearch includes a minimum distance threshold to filter out results that are too far from the search term. The default threshold is 0.3, but you can adjust it by changing the value in the if statement at the end of the loop that processes each object.
+
+```typescript
+const results = picoSearch(people, searchTerm, keys, {
+  algorithm: "jaroWinkler",
+  threshold: 0.5,
+});
+```
 
 ## Acknowledgements
 
