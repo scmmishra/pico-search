@@ -46,10 +46,14 @@ export function picoSearch<T>(
       }
     }
 
-    results.push({
-      object: obj,
-      distance: weightedAverage(distanceScores, weightsInOrder),
-    });
+    const distanceForObject = weightedAverage(distanceScores, weightsInOrder);
+
+    if (distanceForObject >= 0.5) {
+      results.push({
+        object: obj,
+        distance: distanceForObject,
+      });
+    }
   });
 
   results.sort((a, b) => b.distance - a.distance);
