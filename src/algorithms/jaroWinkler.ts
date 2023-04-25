@@ -4,7 +4,10 @@
  * @param b The second string to compare.
  * @returns A floating-point number between 0 and 1, where 0 means the strings are completely dissimilar and 1 means they are identical.
  */
-export default function jaroWinkler(a: string, b: string): number {
+export default function jaroWinkler(str1: string, str2: string): number {
+  str1 = str1.trim().toLowerCase();
+  str2 = str2.trim().toLowerCase();
+
   // Jaro distance
   const m: boolean[] = []; // match flags
   let matches = 0;
@@ -12,8 +15,8 @@ export default function jaroWinkler(a: string, b: string): number {
   let aMatch = "";
   let bMatch = "";
 
-  const len1 = a.length;
-  const len2 = b.length;
+  const len1 = str1.length;
+  const len2 = str2.length;
   const maxDistance = Math.floor(Math.max(len1, len2) / 2) - 1;
 
   // Calculate matches and transpositions for Jaro distance
@@ -21,18 +24,18 @@ export default function jaroWinkler(a: string, b: string): number {
     const start = Math.max(0, i - maxDistance);
     const end = Math.min(i + maxDistance + 1, len2);
     for (let j = start; j < end; j++) {
-      if (m[j] || a[i] !== b[j]) {
+      if (m[j] || str1[i] !== str2[j]) {
         continue;
       }
       m[j] = true;
       matches++;
       if (i === j) {
         // Exact match
-        aMatch += a[i];
+        aMatch += str1[i];
       } else {
         // Partial match
-        aMatch += a[i];
-        bMatch += b[j];
+        aMatch += str1[i];
+        bMatch += str2[j];
         transpositions++;
       }
       break;
@@ -55,7 +58,7 @@ export default function jaroWinkler(a: string, b: string): number {
   let prefix = 0;
 
   // Calculate prefix match for Jaro-Winkler distance
-  while (a[prefix] === b[prefix] && prefix < 4) {
+  while (str1[prefix] === str2[prefix] && prefix < 4) {
     prefix++;
   }
 
