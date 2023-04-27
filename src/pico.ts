@@ -58,7 +58,6 @@ export function picoSearch<T>(
         typeof (obj as any)[keyToCheck] === "string"
       ) {
         const valueToSearch = (obj as any)[keyToCheck].trim().toLowerCase();
-
         const similarity = algorithmFn(valueToSearch, trimmedSearchTerm);
 
         similarityScores.push(similarity);
