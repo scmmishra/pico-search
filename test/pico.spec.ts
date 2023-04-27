@@ -1,7 +1,7 @@
 import { expect, describe, it } from "vitest";
 import { picoSearch } from "../src/pico";
 
-describe("picoSearch: jaroWinkler", () => {
+describe("picoSearch: jaroWinkler [default]", () => {
   const objects = [
     { name: "John Doe", age: 25, city: "New York" },
     { name: "Jane Smith", age: 35, city: "San Francisco" },
@@ -13,15 +13,11 @@ describe("picoSearch: jaroWinkler", () => {
   ];
 
   it("should return an empty array if objectsArray is empty", () => {
-    expect(
-      picoSearch([], "hello", ["name"], { algorithm: "jaroWinkler" })
-    ).toMatchObject([]);
+    expect(picoSearch([], "hello", ["name"])).toMatchObject([]);
   });
 
   it("should return all objects if searchTerm is an empty string", () => {
-    expect(
-      picoSearch(objects, "", ["name"], { algorithm: "jaroWinkler" })
-    ).toMatchObject([
+    expect(picoSearch(objects, "", ["name"])).toMatchObject([
       { age: 25, city: "New York", name: "John Doe" },
       { age: 35, city: "San Francisco", name: "Jane Smith" },
       { age: 45, city: "Los Angeles", name: "Bob Johnson" },
@@ -33,16 +29,14 @@ describe("picoSearch: jaroWinkler", () => {
   });
 
   it("should return objects that match the searchTerm", () => {
-    expect(
-      picoSearch(objects, "John", ["name"], { algorithm: "jaroWinkler" })
-    ).toMatchObject([
+    expect(picoSearch(objects, "John", ["name"])).toMatchObject([
       { age: 25, city: "New York", name: "John Doe" },
       { age: 85, city: "Seattle", name: "John Smith" },
     ]);
 
-    expect(
-      picoSearch(objects, "Boston", ["city"], { algorithm: "jaroWinkler" })
-    ).toMatchObject([{ age: 55, city: "Boston", name: "Alice Williams" }]);
+    expect(picoSearch(objects, "Boston", ["city"])).toMatchObject([
+      { age: 55, city: "Boston", name: "Alice Williams" },
+    ]);
   });
 
   it("should prioritize results based on distance", () => {
@@ -64,15 +58,13 @@ describe("picoSearch: jaroWinkler", () => {
       { name: "city", weight: 1 },
     ];
 
-    expect(
-      picoSearch(objects, "John", keys, { algorithm: "jaroWinkler" })
-    ).toMatchObject([{ name: "John Doe", age: 25, city: "New York" }]);
+    expect(picoSearch(objects, "John", keys)).toMatchObject([
+      { name: "John Doe", age: 25, city: "New York" },
+    ]);
   });
 
   it("should use Jaro-Winkler distance algorithm when specified", () => {
-    expect(
-      picoSearch(objects, "John", ["name"], { algorithm: "jaroWinkler" })
-    ).toMatchObject([
+    expect(picoSearch(objects, "John", ["name"])).toMatchObject([
       { age: 25, city: "New York", name: "John Doe" },
       { age: 85, city: "Seattle", name: "John Smith" },
     ]);
