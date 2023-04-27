@@ -30,7 +30,7 @@ export default function jaroWinkler(str1: string, str2: string): number {
   // Count number of matching characters
   let matches = 0;
   // Check if characters on both string matches
-  for (let i: number = 0; i < len1; i++) {
+  for (let i = 0; i < len1; i++) {
     const ch1: string = str1[i];
     for (let j = 0; j < len2; j++) {
       const ch2: string = str2[j];
@@ -47,8 +47,8 @@ export default function jaroWinkler(str1: string, str2: string): number {
   }
 
   // Count number of transpositions (shared characters placed in different positions)
-  let transpositions: number = 0.0;
-  for (let i: number = 0, j: number = 0; j < len2; j++) {
+  let transpositions = 0.0;
+  for (let i = 0, j = 0; j < len2; j++) {
     if (flag[j]) {
       if (str2[j] != ch1Match[i]) {
         transpositions++;
@@ -64,10 +64,10 @@ export default function jaroWinkler(str1: string, str2: string): number {
     (m / len1 + m / len2 + (m - transpositions / 2.0) / m) / 3.0;
 
   // Length of common prefix between string up to 4 characters
-  let commonPrefix: number = 0.0;
+  let commonPrefix = 0.0;
   len2 = Math.min(4, len2);
 
-  for (let i: number = 0; i < len2; i++) {
+  for (let i = 0; i < len2; i++) {
     if (str1[i] == str2[i]) {
       commonPrefix++;
     }
