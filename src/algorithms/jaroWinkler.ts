@@ -34,7 +34,7 @@ export default function jaroWinkler(str1: string, str2: string): number {
     const ch1: string = str1[i];
     for (let j = 0; j < len2; j++) {
       const ch2: string = str2[j];
-      if (j <= i + delta && j + delta >= 1 && ch1 == ch2 && !flag[j]) {
+      if (j <= i + delta && j + delta >= 1 && ch1 === ch2 && !flag[j]) {
         flag[j] = true;
         ch1Match[matches++] = ch1;
         break;
@@ -50,7 +50,7 @@ export default function jaroWinkler(str1: string, str2: string): number {
   let transpositions = 0.0;
   for (let i = 0, j = 0; j < len2; j++) {
     if (flag[j]) {
-      if (str2[j] != ch1Match[i]) {
+      if (str2[j] !== ch1Match[i]) {
         transpositions++;
       }
       i++;
@@ -68,7 +68,7 @@ export default function jaroWinkler(str1: string, str2: string): number {
   len2 = Math.min(4, len2);
 
   for (let i = 0; i < len2; i++) {
-    if (str1[i] == str2[i]) {
+    if (str1[i] === str2[i]) {
       commonPrefix++;
     }
   }
