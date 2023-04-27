@@ -4,7 +4,7 @@ import { weightedAverage } from "./math";
 
 interface SearchResult<T> {
   object: T;
-  distance: number;
+  similarity: number;
 }
 
 type SearchAlgorithm = "levenshtein" | "jaroWinkler";
@@ -17,7 +17,7 @@ type Keys = Array<KeyWithWeight | string>;
  * @param {string} searchTerm - The search term to match against the objects.
  * @param {Keys} keys - The keys to search in each object.
  * @param {PicoSearchConfig} [config] - Configuration options for the search.
- * @returns {T[]} An array of objects that match the search criteria, ordered by their distance from the search term.
+ * @returns {T[]} An array of objects that match the search criteria, ordered by their similarity from the search term.
  */
 export function picoSearch<T>(
   objectsArray: T[],
@@ -27,15 +27,20 @@ export function picoSearch<T>(
 ): T[] {
   const results: SearchResult<T>[] = [];
 
-  const algorithm = config?.algorithm || "jarowinkler";
+  const algorithmFn =
+    (config?.algorithm || "jarowinkler") === "levenshtein"
+      ? levenshtein
+      : jaroWinkler;
+
   const threshold = config?.threshold || 0.8;
+  const trimmedSearchTerm = searchTerm.trim().toLowerCase();
 
   if (!searchTerm) {
     return objectsArray;
   }
 
   objectsArray.forEach((obj) => {
-    const distanceScores: number[] = [];
+    const similarityScores: number[] = [];
     const weightsInOrder: number[] = [];
 
     for (const key of keys) {
@@ -52,26 +57,28 @@ export function picoSearch<T>(
         Object.prototype.hasOwnProperty.call(obj, keyToCheck) &&
         typeof (obj as any)[keyToCheck] === "string"
       ) {
-        const distance =
-          algorithm === "levenshtein"
-            ? levenshtein((obj as any)[keyToCheck], searchTerm)
-            : jaroWinkler((obj as any)[keyToCheck], searchTerm);
+        const valueToSearch = (obj as any)[keyToCheck].trim().toLowerCase();
 
-        distanceScores.push(distance);
+        const similarity = algorithmFn(valueToSearch, trimmedSearchTerm);
+
+        similarityScores.push(similarity);
       }
     }
 
-    const distanceForObject = weightedAverage(distanceScores, weightsInOrder);
+    const similarityForObject = weightedAverage(
+      similarityScores,
+      weightsInOrder
+    );
 
-    if (distanceForObject >= threshold) {
+    if (similarityForObject >= threshold) {
       results.push({
         object: obj,
-        distance: distanceForObject,
+        similarity: similarityForObject,
       });
     }
   });
 
-  results.sort((a, b) => b.distance - a.distance);
+  results.sort((a, b) => b.similarity - a.similarity);
 
   return results.map((result) => result.object);
 }

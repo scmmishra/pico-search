@@ -5,10 +5,6 @@
  * @returns {number} A value between 0 and 1 indicating the similarity between the two strings, where 1 means the strings are identical and 0 means the strings are completely different.
  */
 export default function jaroWinkler(str1: string, str2: string): number {
-  // Compute Jaro-Winkler distance between two string
-  str1 = str1.trim().toLowerCase();
-  str2 = str2.trim().toLowerCase();
-
   // Swap strings if str1 is shorter than string 2
   if (str1.length < str2.length) {
     const tempString: string = str1;
