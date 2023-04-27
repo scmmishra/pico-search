@@ -27,7 +27,7 @@ export function picoSearch<T>(
 ): T[] {
   const results: SearchResult<T>[] = [];
 
-  const algorithm = config?.algorithm || "levenshtein";
+  const algorithm = config?.algorithm || "jarowinkler";
   const threshold = config?.threshold || 0.8;
 
   if (!searchTerm) {
