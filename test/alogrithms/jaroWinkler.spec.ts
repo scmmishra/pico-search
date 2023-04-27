@@ -42,7 +42,7 @@ const pairs: Array<[string, string, number]> = [
 
 describe("jaroWinkler", () => {
   it("should return correct value based on pairs", () => {
-    pairs.map(([str1, str2, expected]) => {
+    pairs.forEach(([str1, str2, expected]) => {
       expect(jaroWinkler(str1, str2)).toBeCloseTo(expected, 2);
     });
   });
