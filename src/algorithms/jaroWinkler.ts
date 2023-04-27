@@ -1,8 +1,8 @@
 /**
- * Calculates the Jaro-Winkler distance between two strings.
- * @param a The first string to compare.
- * @param b The second string to compare.
- * @returns A floating-point number between 0 and 1, where 0 means the strings are completely dissimilar and 1 means they are identical.
+ * Calculates the Jaro-Winkler similarity between two strings.
+ * @param {string} str1 - The first string to compare.
+ * @param {string} str2 - The second string to compare.
+ * @returns {number} A value between 0 and 1 indicating the similarity between the two strings, where 1 means the strings are identical and 0 means the strings are completely different.
  */
 export default function jaroWinkler(str1: string, str2: string): number {
   // Compute Jaro-Winkler distance between two string

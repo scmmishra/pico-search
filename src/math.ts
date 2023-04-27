@@ -1,3 +1,10 @@
+/**
+ * Calculates the weighted average of a set of values.
+ * @param {number[]} values - The values to be averaged.
+ * @param {number[]} [weights] - The weights to be applied to the values.
+ * @returns {number} The weighted average of the values.
+ * @throws {Error} If the number of values is not equal to the number of weights.
+ */
 export function weightedAverage(values: number[], weights?: number[]): number {
   if (weights && values.length !== weights.length) {
     throw new Error(
