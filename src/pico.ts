@@ -20,7 +20,7 @@ export function picoSearch<T>(
   const results: SearchResult<T>[] = [];
 
   const algorithm = config?.algorithm || "levenshtein";
-  const threshold = config?.threshold || 0.3;
+  const threshold = config?.threshold || 0.8;
 
   if (!searchTerm) {
     return objectsArray;
