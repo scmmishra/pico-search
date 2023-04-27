@@ -6,10 +6,10 @@
  */
 export default function jaroWinkler(str1: string, str2: string): number {
   // Compute Jaro-Winkler distance between two string
-  // Swap strings if str1 is shorter than string 2
   str1 = str1.trim().toLowerCase();
   str2 = str2.trim().toLowerCase();
 
+  // Swap strings if str1 is shorter than string 2
   if (str1.length < str2.length) {
     const tempString: string = str1;
     str1 = str2;
@@ -41,9 +41,11 @@ export default function jaroWinkler(str1: string, str2: string): number {
       }
     }
   }
+
   if (!matches) {
-    return 1.0;
+    return 0;
   }
+
   // Count number of transpositions (shared characters placed in different positions)
   let transpositions: number = 0.0;
   for (let i: number = 0, j: number = 0; j < len2; j++) {
@@ -71,6 +73,5 @@ export default function jaroWinkler(str1: string, str2: string): number {
     }
   }
 
-  // Jaro Winkler Distance Formula simw = simj + lp(1 - simj)
-  return 1.0 - (jaro + commonPrefix * 0.1 * (1.0 - jaro));
+  return jaro + commonPrefix * 0.1 * (1.0 - jaro);
 }
