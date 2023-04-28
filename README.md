@@ -70,11 +70,10 @@ Weights are relative, so a key with a weight of 2 will be considered twice as im
 
 ### Minimum Distance Threshold
 
-PicoSearch includes a minimum distance threshold to filter out results that are too far from the search term. The default threshold is 0.3, but you can adjust it by changing the value in the if statement at the end of the loop that processes each object.
+PicoSearch includes a minimum distance threshold to filter out results that are too far from the search term. The default threshold is 0.8, but you can adjust it by changing the value in the if statement at the end of the loop that processes each object.
 
 ```typescript
 const results = picoSearch(people, searchTerm, keys, {
-  algorithm: "jaroWinkler",
   threshold: 0.5,
 });
 ```
