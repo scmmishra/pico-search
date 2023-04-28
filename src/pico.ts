@@ -1,5 +1,4 @@
 import jaroWinkler from "./algorithms/jaroWinkler";
-import levenshtein from "./algorithms/levenshtein";
 import { weightedAverage } from "./math";
 
 interface SearchResult<T> {
@@ -7,7 +6,6 @@ interface SearchResult<T> {
   similarity: number;
 }
 
-type SearchAlgorithm = "levenshtein" | "jaroWinkler";
 type KeyWithWeight = { name: string; weight: number };
 type Keys = Array<KeyWithWeight | string>;
 
@@ -23,14 +21,9 @@ export function picoSearch<T>(
   objectsArray: T[],
   searchTerm: string,
   keys: Keys,
-  config?: { algorithm?: SearchAlgorithm; threshold?: number }
+  config?: { threshold?: number }
 ): T[] {
   const results: SearchResult<T>[] = [];
-
-  const algorithmFn =
-    (config?.algorithm || "jarowinkler") === "levenshtein"
-      ? levenshtein
-      : jaroWinkler;
 
   const threshold = config?.threshold || 0.8;
   const trimmedSearchTerm = searchTerm.trim().toLowerCase();
@@ -58,7 +51,7 @@ export function picoSearch<T>(
         typeof (obj as any)[keyToCheck] === "string"
       ) {
         const valueToSearch = (obj as any)[keyToCheck].trim().toLowerCase();
-        const similarity = algorithmFn(valueToSearch, trimmedSearchTerm);
+        const similarity = jaroWinkler(valueToSearch, trimmedSearchTerm);
 
         similarityScores.push(similarity);
       }

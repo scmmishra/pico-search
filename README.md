@@ -14,7 +14,7 @@
 
 </div>
 
-PicoSearch is a lightweight fuzzy search JavaScript library that provides developers with an easy-to-use, efficient way to perform fuzzy searches on arrays of objects. It offers two algorithms, the Levenshtein distance algorithm and the Jaro-Winkler distance algorithm, and allows for weighting of search keys. PicoSearch is designed to be simple to use and integrate into any project, making it an excellent choice for developers looking for a fast, lightweight search solution.
+PicoSearch is a lightweight fuzzy search JavaScript library that provides developers with an easy-to-use, efficient way to perform fuzzy searches on arrays of objects. It uses the Jaro-Winkler distance algorithm, and allows for weighting of search keys. PicoSearch is designed to be simple to use and integrate into any project, making it an excellent choice for developers looking for a fast, lightweight search solution.
 
 ## Installation
 
@@ -58,16 +58,6 @@ console.log(results); // [{ name: "Alice", age: 25 }]
 
 ## Options
 
-### Search Algorithms
-
-PicoSearch supports two search algorithms: the Levenshtein distance algorithm and the Jaro-Winkler distance algorithm. The default algorithm is Levenshtein. To specify a different algorithm, pass either `"levenshtein"` or `"jaroWinkler"` as the fourth argument to `picoSearch()`.
-
-```typescript
-const results = picoSearch(people, searchTerm, keys, {
-  algorithm: "jaroWinkler",
-});
-```
-
 ### Weighted Keys
 
 By default, all keys passed to `picoSearch()` are weighted equally. You can specify a weight for a specific key by passing an object with `name` and `weight` properties instead of a string in the `keys` array.
@@ -91,7 +81,7 @@ const results = picoSearch(people, searchTerm, keys, {
 
 ## Acknowledgements
 
-PicoSearch uses the Jaro-Winkler distance algorithm and the Levenshtein distance algorithm, which were developed by William E. Winkler and Vladimir I. Levenshtein, respectively.
+PicoSearch uses the Jaro-Winkler distance algorithm which was developed by William E. Winkler and Matthew Jaro.
 
 ## License
 
