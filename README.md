@@ -16,6 +16,8 @@
 
 PicoSearch is a lightweight fuzzy search JavaScript library that provides developers with an easy-to-use, efficient way to perform fuzzy searches on arrays of objects. It uses the Jaro-Winkler distance algorithm, and allows for weighting of search keys. PicoSearch is designed to be simple to use and integrate into any project, making it an excellent choice for developers looking for a fast, lightweight search solution.
 
+[Try on CodeSandbox](https://codesandbox.io/s/picosearch-demo-i79btf)
+
 ## Installation
 
 ```sh
