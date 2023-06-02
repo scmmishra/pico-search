@@ -23,3 +23,7 @@ export function weightedAverage(values: number[], weights?: number[]): number {
 
   return sum / totalWeight;
 }
+
+export function clamp(value: number, min = 0, max = 1): number {
+  return Math.max(min, Math.min(max, value));
+}

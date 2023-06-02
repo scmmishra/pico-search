@@ -1,5 +1,5 @@
 import jaroWinkler from "./algorithms/jaroWinkler";
-import { weightedAverage } from "./math";
+import { clamp, weightedAverage } from "./math";
 
 interface SearchResult<T> {
   object: T;
@@ -51,7 +51,7 @@ export function picoSearch<T>(
         typeof (obj as any)[keyToCheck] === "string"
       ) {
         const valueToSearch = (obj as any)[keyToCheck].trim().toLowerCase();
-        const similarity = jaroWinkler(valueToSearch, trimmedSearchTerm);
+        const similarity = splitWordsAndRank(valueToSearch, trimmedSearchTerm);
 
         similarityScores.push(similarity);
       }
@@ -73,4 +73,33 @@ export function picoSearch<T>(
   results.sort((a, b) => b.similarity - a.similarity);
 
   return results.map((result) => result.object);
+}
+
+function splitWordsAndRank(valueToSearch: string, searchTerm: string) {
+  const boostFactor = 1.1;
+
+  if (valueToSearch.includes(" ")) {
+    const similarityValues = valueToSearch.split(" ").map((word) => {
+      const jwScore = jaroWinkler(word, searchTerm);
+
+      // if the word includes the search term, boost the score
+      if (word.includes(searchTerm)) {
+        return jwScore * boostFactor;
+      }
+
+      return jwScore;
+    });
+
+    const maxSimilarity = Math.max(...similarityValues);
+    const firstSimilarity = similarityValues[0];
+
+    // boost score if the highest matching word shows up first
+    if (maxSimilarity === firstSimilarity) {
+      return maxSimilarity * boostFactor;
+    }
+
+    return clamp(maxSimilarity);
+  }
+
+  return jaroWinkler(valueToSearch, searchTerm);
 }
