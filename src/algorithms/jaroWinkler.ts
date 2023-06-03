@@ -12,7 +12,7 @@ export default function jaroWinkler(str1: string, str2: string): number {
     str2 = tempString;
   }
 
-  let len1: number = str1.length;
+  const len1: number = str1.length;
   let len2: number = str2.length;
   if (!len2) {
     return 0.0;
@@ -21,8 +21,8 @@ export default function jaroWinkler(str1: string, str2: string): number {
   const delta: number = Math.max(1, len1 / 2.0) - 1.0;
 
   // Flags for transpositions
-  let flag: boolean[] = Array(len2).fill(false);
-  let ch1Match: string[] = Array(len1).fill("");
+  const flag: boolean[] = Array(len2).fill(false);
+  const ch1Match: string[] = Array(len1).fill("");
   // Count number of matching characters
   let matches = 0;
   // Check if characters on both string matches
@@ -53,11 +53,12 @@ export default function jaroWinkler(str1: string, str2: string): number {
     }
   }
 
-  const m: number = matches;
+  const mCount: number = matches;
 
   // Jaro Similarity Formula simj = ( (m / length of s1) + (m / length of s2) + (m - t) / m ) / 3
   const jaro: number =
-    (m / len1 + m / len2 + (m - transpositions / 2.0) / m) / 3.0;
+    (mCount / len1 + mCount / len2 + (mCount - transpositions / 2.0) / mCount) /
+    3.0;
 
   // Length of common prefix between string up to 4 characters
   let commonPrefix = 0.0;
