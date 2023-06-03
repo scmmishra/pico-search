@@ -7,7 +7,7 @@ on:
     branches: [main]
 
 jobs:
-  install:
+  build:
     runs-on: ubuntu-latest
 
     steps:
@@ -19,6 +19,6 @@ jobs:
           run_install: |
             - recursive: true
               args: [--frozen-lockfile, --strict-peer-dependencies]
-            - args: [--global, gulp, prettier, typescript]
+            - args: [--global, vite, typescript]
       - run: pnpm run build
       - run: pnpm coverage
