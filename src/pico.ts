@@ -9,6 +9,8 @@ interface SearchResult<T> {
 type KeyWithWeight = { name: string; weight: number };
 type Keys = Array<KeyWithWeight | string>;
 
+const BOOST_FACTOR = 1.1;
+
 /**
  * Searches for objects in an array based on a search term and a set of keys.
  * @param {T[]} objectsArray - The array of objects to search.
@@ -76,30 +78,32 @@ export function picoSearch<T>(
 }
 
 function splitWordsAndRank(valueToSearch: string, searchTerm: string) {
-  const boostFactor = 1.1;
-
   if (valueToSearch.includes(" ")) {
-    const similarityValues = valueToSearch.split(" ").map((word) => {
-      const jwScore = jaroWinkler(word, searchTerm);
-
-      // if the word includes the search term, boost the score
-      if (word.includes(searchTerm)) {
-        return jwScore * boostFactor;
-      }
-
-      return jwScore;
-    });
+    const similarityValues = valueToSearch
+      .split(" ")
+      .map((word) => getScoreForWord(word, searchTerm));
 
     const maxSimilarity = Math.max(...similarityValues);
     const firstSimilarity = similarityValues[0];
 
     // boost score if the highest matching word shows up first
     if (maxSimilarity === firstSimilarity) {
-      return maxSimilarity * boostFactor;
+      return maxSimilarity * BOOST_FACTOR;
     }
 
     return clamp(maxSimilarity);
   }
 
-  return jaroWinkler(valueToSearch, searchTerm);
+  return getScoreForWord(valueToSearch, searchTerm);
+}
+
+function getScoreForWord(word: string, searchTerm: string) {
+  const jwScore = jaroWinkler(word, searchTerm);
+
+  // if the word includes the search term, boost the score
+  if (word.includes(searchTerm)) {
+    return jwScore * BOOST_FACTOR;
+  }
+
+  return clamp(jwScore);
 }
