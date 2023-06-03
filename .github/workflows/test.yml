@@ -7,20 +7,18 @@ on:
     branches: [main]
 
 jobs:
-  build:
+  install:
     runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        node-version: [14.x, 16.x, 18.x, 20.x]
 
     steps:
       - uses: actions/checkout@v3
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
+
+      - uses: pnpm/action-setup@v2
         with:
-          node-version: ${{ matrix.node-version }}
-      - name: Install deps and build (with cache)
-        uses: bahmutov/npm-install@v1
-      - run: npm run build
-      - run: npm test
+          version: 6.0.2
+          run_install: |
+            - recursive: true
+              args: [--frozen-lockfile, --strict-peer-dependencies]
+            - args: [--global, gulp, prettier, typescript]
+      - run: pnpm run build
+      - run: pnpm coverage
