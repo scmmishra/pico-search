@@ -68,16 +68,19 @@ export function picoSearch<T>(
       }
     }
 
-    const similarityForObject = weightedAverage(
-      similarityScores,
-      weightsInOrder
-    );
+    // atleast one key must have a similarity score above the threshold
+    if (Math.max(...similarityScores) < threshold) {
+      const similarityForObject = weightedAverage(
+        similarityScores,
+        weightsInOrder
+      );
 
-    if (similarityForObject >= threshold) {
-      results.push({
-        object: obj,
-        similarity: similarityForObject,
-      });
+      if (similarityForObject >= threshold) {
+        results.push({
+          object: obj,
+          similarity: similarityForObject,
+        });
+      }
     }
   });
 
