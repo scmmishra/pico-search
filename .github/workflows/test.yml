@@ -20,5 +20,9 @@ jobs:
             - recursive: true
               args: [--frozen-lockfile, --strict-peer-dependencies]
             - args: [--global, vite, typescript]
-      - run: pnpm run build
-      - run: pnpm coverage
+
+      - name: Build
+        run: pnpm run build
+
+      - name: Run coverage
+        run: pnpm coverage
