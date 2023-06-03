@@ -84,6 +84,13 @@ export function picoSearch<T>(
   return results.map((result) => result.object);
 }
 
+/**
+ * Splits a string into words, removes duplicates and empty words, and calculates the similarity score for each word.
+ * Returns the maximum similarity score, with a boost if the highest matching word shows up first.
+ * @param {string} valueToSearch - The string to split into words and rank.
+ * @param {string} searchTerm - The search term to match against the words.
+ * @returns {number} The maximum similarity score, with a boost if the highest matching word shows up first.
+ */
 function splitWordsAndRank(valueToSearch: string, searchTerm: string) {
   const similarityValues = valueToSearch
     .split(/\s+/) // split by one or more whitespace characters
@@ -101,6 +108,13 @@ function splitWordsAndRank(valueToSearch: string, searchTerm: string) {
   return clamp(maxSimilarity);
 }
 
+/**
+ * Calculates the similarity score between a word and a search term using the Jaro-Winkler algorithm.
+ * If the word includes the search term, the score is boosted by a factor.
+ * @param {string} word - The word to compare to the search term.
+ * @param {string} searchTerm - The search term to compare to the word.
+ * @returns {number} The similarity score between the word and the search term, possibly boosted.
+ */
 function getScoreForWord(word: string, searchTerm: string) {
   const jwScore = jaroWinkler(word, searchTerm);
 

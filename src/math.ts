@@ -24,6 +24,13 @@ export function weightedAverage(values: number[], weights?: number[]): number {
   return sum / totalWeight;
 }
 
+/**
+ * Clamps a number between a minimum and maximum value.
+ * @param {number} value - The number to clamp.
+ * @param {number} [min=0] - The minimum value to clamp to.
+ * @param {number} [max=1] - The maximum value to clamp to.
+ * @returns {number} The clamped value, which is between the minimum and maximum values.
+ */
 export function clamp(value: number, min = 0, max = 1): number {
   return Math.max(min, Math.min(max, value));
 }
