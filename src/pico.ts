@@ -63,6 +63,8 @@ export function picoSearch<T>(
         const similarity = splitWordsAndRank(valueToSearch, trimmedSearchTerm);
 
         similarityScores.push(similarity);
+      } else {
+        similarityScores.push(0);
       }
     }
 

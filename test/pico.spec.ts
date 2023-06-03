@@ -107,11 +107,26 @@ describe("picoSearch: jaroWinkler [default]", () => {
     ]);
   });
 
-  it("should use Jaro-Winkler distance algorithm when specified", () => {
-    expect(picoSearch(objects, "John", ["name"])).toMatchObject([
-      { age: 25, city: "New York", name: "John Doe" },
+  it("should work even if some data is missing", () => {
+    const keys = [
+      { name: "name", weight: 5 },
+      { name: "city", weight: 1 },
+    ];
+
+    const objects = [
+      { name: "John Doe", age: 25, city: null },
+      { name: "Jane Smith", age: 35, city: null },
+      { name: "Bob Johnson", age: 45, city: null },
+      { name: "Alice Williams", age: 55, city: "Boston" },
+      { name: "Joe Brown", age: 65, city: "Washington DC" },
+      { name: "Sherry Smith", age: 75, city: "Miami" },
+      { name: "John Smith", age: 85, city: "Seattle" },
+    ];
+
+    expect(picoSearch(objects, "John", keys)).toMatchObject([
+      { age: 25, city: null, name: "John Doe" },
       { age: 85, city: "Seattle", name: "John Smith" },
-      { age: 45, city: "Los Angeles", name: "Bob Johnson" },
+      { age: 45, city: null, name: "Bob Johnson" },
       { age: 65, city: "Washington DC", name: "Joe Brown" },
     ]);
   });
