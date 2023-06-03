@@ -5,6 +5,9 @@ test_patterns = ["**/test/**"]
 exclude_patterns = ["pnpm-lock.yaml"]
 
 [[analyzers]]
+name = "test-coverage"
+
+[[analyzers]]
 name = "secrets"
 enabled = true
 
