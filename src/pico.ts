@@ -9,7 +9,14 @@ interface SearchResult<T> {
 type KeyWithWeight = { name: string; weight: number };
 type Keys = Array<KeyWithWeight | string>;
 
-const BOOST_FACTOR = 1.1;
+const BOOST_FACTOR = {
+  CONTAINS_MATCH: 1.2,
+  FIRST_SIMILARITY: 1.1,
+  // this value is less than contains match,
+  // so that if a word starts with the search term, but also contains it,
+  // it will be boosted less than if it only contains it
+  STARTS_WITH: 1.05,
+};
 
 /**
  * Searches for objects in an array based on a search term and a set of keys.
@@ -78,23 +85,20 @@ export function picoSearch<T>(
 }
 
 function splitWordsAndRank(valueToSearch: string, searchTerm: string) {
-  if (valueToSearch.includes(" ")) {
-    const similarityValues = valueToSearch
-      .split(" ")
-      .map((word) => getScoreForWord(word, searchTerm));
+  const similarityValues = valueToSearch
+    .split(/\s+/) // split by one or more whitespace characters
+    .filter((word, index, words) => word && words.indexOf(word) === index) // remove empty strings and duplicates
+    .map((word) => getScoreForWord(word, searchTerm));
 
-    const maxSimilarity = Math.max(...similarityValues);
-    const firstSimilarity = similarityValues[0];
+  const maxSimilarity = Math.max(...similarityValues);
+  const firstSimilarity = similarityValues[0];
 
-    // boost score if the highest matching word shows up first
-    if (maxSimilarity === firstSimilarity) {
-      return maxSimilarity * BOOST_FACTOR;
-    }
-
-    return clamp(maxSimilarity);
+  // boost score if the highest matching word shows up first
+  if (maxSimilarity === firstSimilarity) {
+    return maxSimilarity * BOOST_FACTOR.FIRST_SIMILARITY;
   }
 
-  return getScoreForWord(valueToSearch, searchTerm);
+  return clamp(maxSimilarity);
 }
 
 function getScoreForWord(word: string, searchTerm: string) {
@@ -102,8 +106,8 @@ function getScoreForWord(word: string, searchTerm: string) {
 
   // if the word includes the search term, boost the score
   if (word.includes(searchTerm)) {
-    return jwScore * BOOST_FACTOR;
+    return jwScore * BOOST_FACTOR.CONTAINS_MATCH;
   }
 
-  return clamp(jwScore);
+  return jwScore;
 }
