@@ -10,7 +10,7 @@
 
 ![DeepSource](https://deepsource.io/gh/scmmishra/pico-search.svg/?label=active+issues&show_trend=true&token=_HAIDwNbi1ocMhaBKxB_BcSQ)
 ![DeepSource](https://deepsource.io/gh/scmmishra/pico-search.svg/?label=resolved+issues&show_trend=true&token=_HAIDwNbi1ocMhaBKxB_BcSQ)
-![Less than 400B](https://deno.bundlejs.com/?q=@scmmishra/pico-search&badge)
+![Less than 1KB](https://deno.bundlejs.com/?q=@scmmishra/pico-search&badge)
 
 </div>
 
