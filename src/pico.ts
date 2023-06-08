@@ -1,5 +1,5 @@
 import jaroWinkler from "./algorithms/jaroWinkler";
-import { clamp, weightedAverage } from "./math";
+import { clamp, weightedAverage } from "./utils";
 
 interface SearchResult<T> {
   object: T;
