@@ -1,5 +1,6 @@
 import { expect, describe, it } from "vitest";
-import { weightedAverage, clamp } from "../src/math";
+import { weightedAverage, clamp, splitAndTrim } from "../src/utils";
+import { beforeEach } from "node:test";
 
 describe("weightedAverage", () => {
   it("calculates the correct weighted average with default weights", () => {
@@ -44,5 +45,31 @@ describe("clamp", () => {
     expect(clamp(2)).toBe(1);
     expect(clamp(2, 0, 1)).toBe(1);
     expect(clamp(2, -1, 2)).toBe(2);
+  });
+});
+
+describe("splitAndTrim", function () {
+  it("splits a regular string", () => {
+    const input = "one two three";
+
+    expect(splitAndTrim(input)).toEqual(["one", "two", "three"]);
+  });
+
+  it("splits a single string", () => {
+    const input = "one";
+
+    expect(splitAndTrim(input)).toEqual(["one"]);
+  });
+
+  it("splits a empty string", () => {
+    const input = "";
+
+    expect(splitAndTrim(input)).toEqual([]);
+  });
+
+  it("splits a string with multiple spaces", () => {
+    const input = "one    two  three";
+
+    expect(splitAndTrim(input)).toEqual(["one", "two", "three"]);
   });
 });
