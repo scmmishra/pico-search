@@ -1,5 +1,5 @@
 import jaroWinkler from "./algorithms/jaroWinkler";
-import { clamp, weightedAverage } from "./utils";
+import { clamp, weightedAverage, splitAndTrim } from "./utils";
 
 interface SearchResult<T> {
   object: T;
@@ -94,10 +94,9 @@ export function picoSearch<T>(
  * @returns {number} The maximum similarity score, with a boost if the highest matching word shows up first.
  */
 function splitWordsAndRank(valueToSearch: string, searchTerm: string) {
-  const similarityValues = valueToSearch
-    .split(/\s+/) // split by one or more whitespace characters
-    .filter((word, index, words) => word && words.indexOf(word) === index) // remove empty strings and duplicates
-    .map((word) => getScoreForWord(word, searchTerm));
+  const similarityValues = splitAndTrim(valueToSearch).map((word) =>
+    getScoreForWord(word, searchTerm)
+  );
 
   const maxSimilarity = Math.max(...similarityValues);
   const firstSimilarity = similarityValues[0];

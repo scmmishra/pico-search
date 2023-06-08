@@ -34,3 +34,14 @@ export function weightedAverage(values: number[], weights?: number[]): number {
 export function clamp(value: number, min = 0, max = 1): number {
   return Math.max(min, Math.min(max, value));
 }
+
+/**
+ * Splits a string into words, removes duplicates and empty words.
+ * @param {string } value - The string to split and trim.
+ * @returns {string[]} Returns an array of words, with duplicates and empty strings removed.
+ */
+export function splitAndTrim(value: string): string[] {
+  return value
+    .split(/\s+/) // split by one or more whitespace characters
+    .filter((word, index, words) => word && words.indexOf(word) === index); // remove empty strings and duplicates
+}
