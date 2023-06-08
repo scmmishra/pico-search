@@ -94,19 +94,26 @@ export function picoSearch<T>(
  * @returns {number} The maximum similarity score, with a boost if the highest matching word shows up first.
  */
 function splitWordsAndRank(valueToSearch: string, searchTerm: string) {
-  const similarityValues = splitAndTrim(valueToSearch).map((word) =>
-    getScoreForWord(word, searchTerm)
-  );
+  const splitSearchCandidate = splitAndTrim(valueToSearch);
+  const splitSearchTerm = splitAndTrim(searchTerm);
 
-  const maxSimilarity = Math.max(...similarityValues);
-  const firstSimilarity = similarityValues[0];
+  const splitScores = splitSearchTerm.map((searchWord) => {
+    const similarityValues = splitSearchCandidate.map((word) =>
+      getScoreForWord(word, searchWord)
+    );
 
-  // boost score if the highest matching word shows up first
-  if (maxSimilarity === firstSimilarity) {
-    return maxSimilarity * BOOST_FACTOR.FIRST_SIMILARITY;
-  }
+    const maxSimilarity = Math.max(...similarityValues);
+    const firstSimilarity = similarityValues[0];
 
-  return clamp(maxSimilarity);
+    // boost score if the highest matching word shows up first
+    if (maxSimilarity === firstSimilarity) {
+      return maxSimilarity * BOOST_FACTOR.FIRST_SIMILARITY;
+    }
+
+    return clamp(maxSimilarity);
+  });
+
+  return weightedAverage(splitScores);
 }
 
 /**
