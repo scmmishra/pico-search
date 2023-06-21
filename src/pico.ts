@@ -34,7 +34,7 @@ export function picoSearch<T>(
 ): T[] {
   const results: SearchResult<T>[] = [];
 
-  const threshold = config?.threshold || 0.8;
+  const threshold = (config && config.threshold) || 0.8;
   const trimmedSearchTerm = searchTerm.trim().toLowerCase();
 
   if (!searchTerm) {
