@@ -1,6 +1,5 @@
 import { expect, describe, it } from "vitest";
 import { weightedAverage, clamp, splitAndTrim } from "../src/utils";
-import { beforeEach } from "node:test";
 
 describe("weightedAverage", () => {
   it("calculates the correct weighted average with default weights", () => {
