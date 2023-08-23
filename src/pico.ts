@@ -30,43 +30,41 @@ export function picoSearch<T>(
   objectsArray: T[],
   searchTerm: string,
   keys: Keys,
-  config?: { threshold?: number }
+  config: { threshold: number }
 ): T[] {
-  const results: SearchResult<T>[] = [];
-
-  const threshold = (config && config.threshold) || 0.8;
-  const trimmedSearchTerm = searchTerm.trim().toLowerCase();
-
   if (!searchTerm) {
     return objectsArray;
   }
+
+  const results: SearchResult<T>[] = [];
+  const threshold = (config && config.threshold) || 0.8;
+  const trimmedSearchTerm = searchTerm.trim().toLowerCase();
 
   objectsArray.forEach((obj) => {
     const similarityScores: number[] = [];
     const weightsInOrder: number[] = [];
 
-    for (const key of keys) {
-      const keyToCheck =
-        typeof key === "string" ? key : (key as KeyWithWeight).name;
+    keys.forEach((key) => {
+      let keyToCheck: string;
+      let weight: number = 1;
 
-      if (typeof key !== "string") {
-        weightsInOrder.push((key as KeyWithWeight).weight);
+      if (typeof key === "string") {
+        keyToCheck = key;
       } else {
-        weightsInOrder.push(1);
+        keyToCheck = key.name;
+        weight = key.weight;
       }
 
-      if (
-        Object.prototype.hasOwnProperty.call(obj, keyToCheck) &&
-        typeof (obj as any)[keyToCheck] === "string"
-      ) {
-        const valueToSearch = (obj as any)[keyToCheck].trim().toLowerCase();
-        const similarity = splitWordsAndRank(valueToSearch, trimmedSearchTerm);
+      weightsInOrder.push(weight);
+      const valueToSearch = (obj as any)[keyToCheck]?.trim().toLowerCase();
 
+      if (valueToSearch) {
+        const similarity = splitWordsAndRank(valueToSearch, trimmedSearchTerm);
         similarityScores.push(similarity);
       } else {
         similarityScores.push(0);
       }
-    }
+    });
 
     const similarityForObject = weightedAverage(
       similarityScores,
@@ -74,10 +72,7 @@ export function picoSearch<T>(
     );
 
     if (similarityForObject >= threshold) {
-      results.push({
-        object: obj,
-        similarity: similarityForObject,
-      });
+      results.push({ object: obj, similarity: similarityForObject });
     }
   });
 
