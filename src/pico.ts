@@ -37,7 +37,7 @@ export function picoSearch<T>(
   }
 
   const results: SearchResult<T>[] = [];
-  const threshold = (config && config.threshold) || 0.8;
+  const threshold = config?.threshold ?? 0.8;
   const trimmedSearchTerm = searchTerm.trim().toLowerCase();
 
   objectsArray.forEach((obj) => {
@@ -46,7 +46,7 @@ export function picoSearch<T>(
 
     keys.forEach((key) => {
       let keyToCheck: string;
-      let weight: number = 1;
+      let weight = 1;
 
       if (typeof key === "string") {
         keyToCheck = key;
