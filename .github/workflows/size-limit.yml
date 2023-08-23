@@ -25,6 +25,5 @@ jobs:
       - name: Build
         run: pnpm run build
 
-      - uses: andresz1/size-limit-action@v1
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Check size
+        run: pnpm run size
