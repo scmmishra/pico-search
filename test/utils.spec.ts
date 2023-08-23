@@ -1,6 +1,5 @@
 import { expect, describe, it } from "vitest";
 import { weightedAverage, clamp, splitAndTrim } from "../src/utils";
-import { beforeEach } from "node:test";
 
 describe("weightedAverage", () => {
   it("calculates the correct weighted average with default weights", () => {
@@ -23,7 +22,7 @@ describe("weightedAverage", () => {
     const values = [1, 2, 3];
     const weights = [1, 2, 3, 4, 5];
     expect(() => weightedAverage(values, weights)).toThrow(
-      "The number of values must be equal to the number of weights"
+      "The number of values must be equal to the number of weights",
     );
   });
 });
@@ -48,7 +47,7 @@ describe("clamp", () => {
   });
 });
 
-describe("splitAndTrim", function () {
+describe("splitAndTrim", () => {
   it("splits a regular string", () => {
     const input = "one two three";
 
