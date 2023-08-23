@@ -30,54 +30,49 @@ export function picoSearch<T>(
   objectsArray: T[],
   searchTerm: string,
   keys: Keys,
-  config?: { threshold?: number }
+  config: { threshold: number },
 ): T[] {
-  const results: SearchResult<T>[] = [];
-
-  const threshold = (config && config.threshold) || 0.8;
-  const trimmedSearchTerm = searchTerm.trim().toLowerCase();
-
   if (!searchTerm) {
     return objectsArray;
   }
+
+  const results: SearchResult<T>[] = [];
+  const threshold = config?.threshold ?? 0.8;
+  const trimmedSearchTerm = searchTerm.trim().toLowerCase();
 
   objectsArray.forEach((obj) => {
     const similarityScores: number[] = [];
     const weightsInOrder: number[] = [];
 
-    for (const key of keys) {
-      const keyToCheck =
-        typeof key === "string" ? key : (key as KeyWithWeight).name;
+    keys.forEach((key) => {
+      let keyToCheck: string;
+      let weight = 1;
 
-      if (typeof key !== "string") {
-        weightsInOrder.push((key as KeyWithWeight).weight);
+      if (typeof key === "string") {
+        keyToCheck = key;
       } else {
-        weightsInOrder.push(1);
+        keyToCheck = key.name;
+        weight = key.weight;
       }
 
-      if (
-        Object.prototype.hasOwnProperty.call(obj, keyToCheck) &&
-        typeof (obj as any)[keyToCheck] === "string"
-      ) {
-        const valueToSearch = (obj as any)[keyToCheck].trim().toLowerCase();
-        const similarity = splitWordsAndRank(valueToSearch, trimmedSearchTerm);
+      weightsInOrder.push(weight);
+      const valueToSearch = (obj as any)[keyToCheck]?.trim().toLowerCase(); // skipcq: JS-0323
 
+      if (valueToSearch) {
+        const similarity = splitWordsAndRank(valueToSearch, trimmedSearchTerm);
         similarityScores.push(similarity);
       } else {
         similarityScores.push(0);
       }
-    }
+    });
 
     const similarityForObject = weightedAverage(
       similarityScores,
-      weightsInOrder
+      weightsInOrder,
     );
 
     if (similarityForObject >= threshold) {
-      results.push({
-        object: obj,
-        similarity: similarityForObject,
-      });
+      results.push({ object: obj, similarity: similarityForObject });
     }
   });
 
@@ -99,18 +94,15 @@ function splitWordsAndRank(valueToSearch: string, searchTerm: string) {
 
   const splitScores = splitSearchTerm.map((searchWord) => {
     const similarityValues = splitSearchCandidate.map((word) =>
-      getScoreForWord(word, searchWord)
+      getScoreForWord(word, searchWord),
     );
 
     const maxSimilarity = Math.max(...similarityValues);
-    const firstSimilarity = similarityValues[0];
 
     // boost score if the highest matching word shows up first
-    if (maxSimilarity === firstSimilarity) {
-      return maxSimilarity * BOOST_FACTOR.FIRST_SIMILARITY;
-    }
-
-    return clamp(maxSimilarity);
+    return maxSimilarity === similarityValues[0]
+      ? maxSimilarity * BOOST_FACTOR.FIRST_SIMILARITY
+      : clamp(maxSimilarity);
   });
 
   return weightedAverage(splitScores);
@@ -123,13 +115,10 @@ function splitWordsAndRank(valueToSearch: string, searchTerm: string) {
  * @param {string} searchTerm - The search term to compare to the word.
  * @returns {number} The similarity score between the word and the search term, possibly boosted.
  */
-function getScoreForWord(word: string, searchTerm: string) {
+function getScoreForWord(word: string, searchTerm: string): number {
   const jwScore = jaroWinkler(word, searchTerm);
 
-  // if the word includes the search term, boost the score
-  if (word.includes(searchTerm)) {
-    return jwScore * BOOST_FACTOR.CONTAINS_MATCH;
-  }
-
-  return jwScore;
+  return word.includes(searchTerm)
+    ? jwScore * BOOST_FACTOR.CONTAINS_MATCH
+    : jwScore;
 }
