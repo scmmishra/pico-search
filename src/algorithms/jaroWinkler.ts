@@ -7,22 +7,21 @@
 export default function jaroWinkler(str1: string, str2: string): number {
   // Swap strings if str1 is shorter than string 2
   if (str1.length < str2.length) {
-    const tempString: string = str1;
-    str1 = str2;
-    str2 = tempString;
+    [str1, str2] = [str2, str1];
   }
 
-  const len1: number = str1.length;
-  let len2: number = str2.length;
-  if (!len2) {
-    return 0.0;
-  }
+  const len1 = str1.length;
+  const len2 = str2.length;
 
-  const delta: number = Math.max(1, len1 / 2.0) - 1.0;
+  if (len1 === 0) return 0.0;
+  if (len2 === 0) return 0.0;
+
+  const delta = Math.floor(len1 / 2) - 1;
 
   // Flags for transpositions
-  const flag: boolean[] = Array(len2).fill(false);
-  const ch1Match: string[] = Array(len1).fill("");
+  const flag = Array(len2).fill(false);
+  const ch1Match = Array(len1).fill("");
+
   // Count number of matching characters
   let matches = 0;
   // Check if characters on both string matches
