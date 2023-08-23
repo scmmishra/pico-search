@@ -56,7 +56,7 @@ export function picoSearch<T>(
       }
 
       weightsInOrder.push(weight);
-      const valueToSearch = (obj as any)[keyToCheck]?.trim().toLowerCase();
+      const valueToSearch = (obj as any)[keyToCheck]?.trim().toLowerCase(); // skipcq: JS-0323
 
       if (valueToSearch) {
         const similarity = splitWordsAndRank(valueToSearch, trimmedSearchTerm);
