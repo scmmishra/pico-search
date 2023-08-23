@@ -98,14 +98,11 @@ function splitWordsAndRank(valueToSearch: string, searchTerm: string) {
     );
 
     const maxSimilarity = Math.max(...similarityValues);
-    const firstSimilarity = similarityValues[0];
 
     // boost score if the highest matching word shows up first
-    if (maxSimilarity === firstSimilarity) {
-      return maxSimilarity * BOOST_FACTOR.FIRST_SIMILARITY;
-    }
-
-    return clamp(maxSimilarity);
+    return maxSimilarity === similarityValues[0]
+      ? maxSimilarity * BOOST_FACTOR.FIRST_SIMILARITY
+      : clamp(maxSimilarity);
   });
 
   return weightedAverage(splitScores);
@@ -118,13 +115,10 @@ function splitWordsAndRank(valueToSearch: string, searchTerm: string) {
  * @param {string} searchTerm - The search term to compare to the word.
  * @returns {number} The similarity score between the word and the search term, possibly boosted.
  */
-function getScoreForWord(word: string, searchTerm: string) {
+function getScoreForWord(word: string, searchTerm: string): number {
   const jwScore = jaroWinkler(word, searchTerm);
 
-  // if the word includes the search term, boost the score
-  if (word.includes(searchTerm)) {
-    return jwScore * BOOST_FACTOR.CONTAINS_MATCH;
-  }
-
-  return jwScore;
+  return word.includes(searchTerm)
+    ? jwScore * BOOST_FACTOR.CONTAINS_MATCH
+    : jwScore;
 }
