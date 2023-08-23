@@ -11,7 +11,7 @@ export default function jaroWinkler(str1: string, str2: string): number {
   }
 
   const len1 = str1.length;
-  let len2 = str2.length;
+  const len2 = str2.length;
 
   if (len1 === 0) return 0.0;
   if (len2 === 0) return 0.0;
