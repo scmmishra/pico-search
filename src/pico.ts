@@ -30,7 +30,7 @@ export function picoSearch<T>(
   objectsArray: T[],
   searchTerm: string,
   keys: Keys,
-  config: { threshold: number }
+  config: { threshold: number },
 ): T[] {
   if (!searchTerm) {
     return objectsArray;
@@ -68,7 +68,7 @@ export function picoSearch<T>(
 
     const similarityForObject = weightedAverage(
       similarityScores,
-      weightsInOrder
+      weightsInOrder,
     );
 
     if (similarityForObject >= threshold) {
@@ -94,7 +94,7 @@ function splitWordsAndRank(valueToSearch: string, searchTerm: string) {
 
   const splitScores = splitSearchTerm.map((searchWord) => {
     const similarityValues = splitSearchCandidate.map((word) =>
-      getScoreForWord(word, searchWord)
+      getScoreForWord(word, searchWord),
     );
 
     const maxSimilarity = Math.max(...similarityValues);
