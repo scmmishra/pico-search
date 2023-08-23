@@ -31,6 +31,8 @@
     "coverage": "vitest run --coverage"
   },
   "devDependencies": {
+    "@size-limit/esbuild": "^8.2.6",
+    "@size-limit/esbuild-why": "^8.2.6",
     "@size-limit/preset-small-lib": "^8.2.6",
     "@types/node": "^18.16.0",
     "@vitest/coverage-c8": "^0.29.8",
