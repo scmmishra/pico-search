@@ -27,15 +27,26 @@
     "dev": "tsup --watch",
     "build": "tsup",
     "test": "vitest",
+    "size": "size-limit",
     "coverage": "vitest run --coverage"
   },
   "devDependencies": {
+    "@size-limit/esbuild": "^8.2.6",
+    "@size-limit/esbuild-why": "^8.2.6",
+    "@size-limit/preset-small-lib": "^8.2.6",
     "@types/node": "^18.16.0",
     "@vitest/coverage-c8": "^0.29.8",
     "jsdom": "^21.1.1",
+    "size-limit": "^8.2.6",
     "tsup": "^6.7.0",
     "typescript": "^4.9.5",
-    "vitest": "^0.29.8",
-    "vite": "^4.3.9"
-  }
+    "vite": "^4.3.9",
+    "vitest": "^0.29.8"
+  },
+  "size-limit": [
+    {
+      "path": "dist/index.js",
+      "limit": "1.2 kB"
+    }
+  ]
 }
