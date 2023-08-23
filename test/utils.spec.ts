@@ -47,7 +47,7 @@ describe("clamp", () => {
   });
 });
 
-describe("splitAndTrim", function () {
+describe("splitAndTrim", () => {
   it("splits a regular string", () => {
     const input = "one two three";
 
