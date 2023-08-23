@@ -11,7 +11,7 @@ export default function jaroWinkler(str1: string, str2: string): number {
   }
 
   const len1 = str1.length;
-  const len2 = str2.length;
+  let len2 = str2.length;
 
   if (len1 === 0) return 0.0;
   if (len2 === 0) return 0.0;
@@ -61,9 +61,9 @@ export default function jaroWinkler(str1: string, str2: string): number {
 
   // Length of common prefix between string up to 4 characters
   let commonPrefix = 0.0;
-  len2 = Math.min(4, len2);
+  const prefixLength = Math.min(4, len2);
 
-  for (let i = 0; i < len2; i++) {
+  for (let i = 0; i < prefixLength; i++) {
     if (str1[i] === str2[i]) {
       commonPrefix++;
     }
