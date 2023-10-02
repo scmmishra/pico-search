@@ -30,7 +30,7 @@ export function picoSearch<T>(
   objectsArray: T[],
   searchTerm: string,
   keys: Keys,
-  config: { threshold: number },
+  config: { threshold: number }
 ): T[] {
   if (!searchTerm) {
     return objectsArray;
@@ -39,6 +39,7 @@ export function picoSearch<T>(
   const results: SearchResult<T>[] = [];
   const threshold = config?.threshold ?? 0.8;
   const trimmedSearchTerm = searchTerm.trim().toLowerCase();
+  const splitSearchTerm = splitAndTrim(trimmedSearchTerm);
 
   objectsArray.forEach((obj) => {
     const similarityScores: number[] = [];
@@ -59,7 +60,7 @@ export function picoSearch<T>(
       const valueToSearch = (obj as any)[keyToCheck]?.trim().toLowerCase(); // skipcq: JS-0323
 
       if (valueToSearch) {
-        const similarity = splitWordsAndRank(valueToSearch, trimmedSearchTerm);
+        const similarity = splitWordsAndRank(valueToSearch, splitSearchTerm);
         similarityScores.push(similarity);
       } else {
         similarityScores.push(0);
@@ -68,7 +69,7 @@ export function picoSearch<T>(
 
     const similarityForObject = weightedAverage(
       similarityScores,
-      weightsInOrder,
+      weightsInOrder
     );
 
     if (similarityForObject >= threshold) {
@@ -88,13 +89,12 @@ export function picoSearch<T>(
  * @param {string} searchTerm - The search term to match against the words.
  * @returns {number} The maximum similarity score, with a boost if the highest matching word shows up first.
  */
-function splitWordsAndRank(valueToSearch: string, searchTerm: string) {
+function splitWordsAndRank(valueToSearch: string, splitSearchTerm: string[]) {
   const splitSearchCandidate = splitAndTrim(valueToSearch);
-  const splitSearchTerm = splitAndTrim(searchTerm);
 
   const splitScores = splitSearchTerm.map((searchWord) => {
     const similarityValues = splitSearchCandidate.map((word) =>
-      getScoreForWord(word, searchWord),
+      getScoreForWord(word, searchWord)
     );
 
     const maxSimilarity = Math.max(...similarityValues);
