@@ -32,7 +32,7 @@ export function picoSearch<T>(
   keys: Keys,
   config: { threshold: number }
 ): T[] {
-  if (!searchTerm) {
+  if (!searchTerm || typeof searchTerm !== "string") {
     return objectsArray;
   }
 
