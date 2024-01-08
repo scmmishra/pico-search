@@ -8,7 +8,7 @@
 export function weightedAverage(values: number[], weights?: number[]): number {
   if (weights && values.length !== weights.length) {
     throw new Error(
-      "The number of values must be equal to the number of weights"
+      "The number of values must be equal to the number of weights",
     );
   }
 
