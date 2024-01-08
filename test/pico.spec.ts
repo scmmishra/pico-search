@@ -30,7 +30,7 @@ describe("splitWordsAndRank", () => {
       const result = picoSearch(
         [{ name: shouldNotWork }, { name: shouldWork }],
         searchTerm,
-        ["name"]
+        ["name"],
       );
 
       const names = result.map((r) => r.name);
@@ -85,7 +85,7 @@ describe("picoSearch: jaroWinkler [default]", () => {
     expect(
       picoSearch(objects, "ohn", ["name"], {
         threshold: 0.7,
-      })
+      }),
     ).toMatchObject([
       { age: 25, city: "New York", name: "John Doe" },
       { age: 85, city: "Seattle", name: "John Smith" },
