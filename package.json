@@ -27,8 +27,10 @@
     "dev": "tsup --watch",
     "build": "tsup",
     "test": "vitest",
+    "benchmark": "vitest bench",
     "size": "size-limit",
     "coverage": "vitest run --coverage"
+
   },
   "devDependencies": {
     "@size-limit/esbuild": "^11.1.4",
