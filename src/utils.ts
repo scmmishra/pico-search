@@ -6,20 +6,20 @@
  * @throws {Error} If the number of values is not equal to the number of weights.
  */
 export function weightedAverage(values: number[], weights?: number[]): number {
+  let sum = 0;
+  let totalWeight = 0;
+
   if (weights && values.length !== weights.length) {
     throw new Error(
       "The number of values must be equal to the number of weights"
     );
   }
 
-  const sum = values.reduce((prev, curr, index) => {
-    const weight = weights ? weights[index] : 1;
-    return prev + curr * weight;
-  }, 0);
-
-  const totalWeight = weights
-    ? weights.reduce((prev, curr) => prev + curr, 0)
-    : values.length;
+  for (let i = 0; i < values.length; i++) {
+    const weight = weights ? weights[i] : 1;
+    sum += values[i] * weight;
+    totalWeight += weight;
+  }
 
   return sum / totalWeight;
 }
