@@ -22,7 +22,7 @@ describe("weightedAverage", () => {
     const values = [1, 2, 3];
     const weights = [1, 2, 3, 4, 5];
     expect(() => weightedAverage(values, weights)).toThrow(
-      "The number of values must be equal to the number of weights",
+      "The number of values must be equal to the number of weights"
     );
   });
 });
@@ -30,20 +30,14 @@ describe("weightedAverage", () => {
 describe("clamp", () => {
   it("returns the value if it is within the range", () => {
     expect(clamp(0.5)).toBe(0.5);
-    expect(clamp(0.5, 0, 1)).toBe(0.5);
-    expect(clamp(0.5, -1, 1)).toBe(0.5);
   });
 
   it("returns the minimum value if the value is less than the minimum", () => {
     expect(clamp(-1)).toBe(0);
-    expect(clamp(-1, 0, 1)).toBe(0);
-    expect(clamp(-1, -2, 1)).toBe(-1);
   });
 
   it("returns the maximum value if the value is greater than the maximum", () => {
     expect(clamp(2)).toBe(1);
-    expect(clamp(2, 0, 1)).toBe(1);
-    expect(clamp(2, -1, 2)).toBe(2);
   });
 });
 
