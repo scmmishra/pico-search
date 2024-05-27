@@ -5,7 +5,7 @@ import jaroWinkler from "../src/algorithms/jaroWinkler";
 // generate 10000 random strings of 10 characters
 const testData = Array.from({ length: 50000 }, (ii) => {
   return {
-    name: `data-point-${ii}`,
+    name: `some-text data-point-${ii}`,
   };
 });
 
