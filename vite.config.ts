@@ -6,7 +6,7 @@ export default defineConfig({
   test: {
     environment: "jsdom",
     benchmark: {
-      include: ["test/bench/**"],
+      include: ["bench/**"],
     },
     coverage: {
       reporter: ["cobertura", "text"],

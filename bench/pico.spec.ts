@@ -1,6 +1,6 @@
 import { bench, describe } from "vitest";
-import { picoSearch } from "../../src/pico";
-import jaroWinkler from "../../src/algorithms/jaroWinkler";
+import { picoSearch } from "../src/pico";
+import jaroWinkler from "../src/algorithms/jaroWinkler";
 
 // generate 10000 random strings of 10 characters
 const testData = Array.from({ length: 50000 }, (ii) => {
