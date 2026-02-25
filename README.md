@@ -8,10 +8,7 @@
 <br>
 <br>
 
-![npm](https://img.shields.io/npm/dm/%40scmmishra%2Fpico-search) ![Less than 1KB](https://deno.bundlejs.com/?q=@scmmishra/pico-search&badge)
-<br>
-![DeepSource](https://deepsource.io/gh/scmmishra/pico-search.svg/?label=active+issues&show_trend=true&token=_HAIDwNbi1ocMhaBKxB_BcSQ)
-![DeepSource](https://deepsource.io/gh/scmmishra/pico-search.svg/?label=resolved+issues&show_trend=true&token=_HAIDwNbi1ocMhaBKxB_BcSQ)
+![npm](https://img.shields.io/npm/dm/%40scmmishra%2Fpico-search) 
 
 </div>
 
