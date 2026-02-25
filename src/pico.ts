@@ -10,12 +10,9 @@ type KeyWithWeight = { name: string; weight: number };
 type Keys = Array<KeyWithWeight | string>;
 
 const BOOST_FACTOR = {
+  STARTS_WITH: 1.3,
   CONTAINS_MATCH: 1.2,
   FIRST_SIMILARITY: 1.1,
-  // this value is less than contains match,
-  // so that if a word starts with the search term, but also contains it,
-  // it will be boosted less than if it only contains it
-  STARTS_WITH: 1.05,
 };
 
 /**
@@ -60,7 +57,10 @@ export function picoSearch<T>(
       const valueToSearch = (obj as any)[keyToCheck]?.trim().toLowerCase(); // skipcq: JS-0323
 
       if (valueToSearch) {
-        const similarity = splitWordsAndRank(valueToSearch, splitSearchTerm);
+        const similarity =
+          valueToSearch === trimmedSearchTerm
+            ? 1
+            : splitWordsAndRank(valueToSearch, splitSearchTerm);
         similarityScores.push(similarity);
       } else {
         similarityScores.push(0);
@@ -118,7 +118,7 @@ function splitWordsAndRank(valueToSearch: string, splitSearchTerm: string[]) {
 function getScoreForWord(word: string, searchTerm: string): number {
   const jwScore = jaroWinkler(word, searchTerm);
 
-  return word.includes(searchTerm)
-    ? jwScore * BOOST_FACTOR.CONTAINS_MATCH
-    : jwScore;
+  if (word.startsWith(searchTerm)) return clamp(jwScore * BOOST_FACTOR.STARTS_WITH);
+  if (word.includes(searchTerm)) return clamp(jwScore * BOOST_FACTOR.CONTAINS_MATCH);
+  return jwScore;
 }
