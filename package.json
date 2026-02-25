@@ -12,20 +12,26 @@
   "bugs": "https://github.com/scmmishra/pico-search/issues",
   "exports": {
     ".": {
-      "require": "./dist/index.js",
-      "import": "./dist/index.mjs",
-      "types": "./dist/index.d.ts"
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      },
+      "import": {
+        "types": "./dist/index.d.mts",
+        "default": "./dist/index.mjs"
+      }
     }
   },
-  "main": "dist/index.js",
+  "main": "dist/index.cjs",
   "module": "dist/index.mjs",
-  "types": "dist/index.d.ts",
+  "types": "dist/index.d.cts",
+  "type": "module",
   "files": [
     "/dist"
   ],
   "scripts": {
-    "dev": "tsup --watch",
-    "build": "tsup",
+    "dev": "tsdown --watch",
+    "build": "tsdown",
     "test": "vitest",
     "benchmark": "vitest bench",
     "size": "size-limit",
@@ -39,7 +45,7 @@
     "@types/node": "^20.12.12",
     "jsdom": "^24.1.0",
     "size-limit": "^11.1.4",
-    "tsup": "^8.0.2",
+    "tsdown": "^0.20.3",
     "typescript": "^5.4.5",
     "vite": "^5.2.11",
     "vitest": "^1.6.0",
@@ -47,7 +53,7 @@
   },
   "size-limit": [
     {
-      "path": "dist/index.js",
+      "path": "dist/index.cjs",
       "limit": "1.2 kB"
     }
   ]
