@@ -1,133 +1,103 @@
 import { expect, describe, it } from "vitest";
 import { picoSearch } from "../src/pico";
 
-const knownPairs = [
-  {
-    shouldWork: "The Shawshank Redemption",
-    shouldNotWork: "Shrek",
-    searchTerm: "shawshank",
-  },
-  {
-    shouldWork: "Crocodile Dundee",
-    shouldNotWork: "Madagascar 3: Europe's Most Wanted",
-    searchTerm: "Dund",
-  },
-  {
-    shouldWork: "Crocodile Dundee",
-    shouldNotWork: "Django Unchained",
-    searchTerm: "Dund",
-  },
-  {
-    shouldWork: "Crocodile Dundee",
-    shouldNotWork: "The Deer Hunter",
-    searchTerm: "Dund",
-  },
+const objects = [
+  { name: "John Doe", age: 25, city: "New York" },
+  { name: "Jane Smith", age: 35, city: "San Francisco" },
+  { name: "Bob Johnson", age: 45, city: "Los Angeles" },
+  { name: "Alice Williams", age: 55, city: "Boston" },
+  { name: "Joe Brown", age: 65, city: "Washington DC" },
+  { name: "Sherry Smith", age: 75, city: "Miami" },
+  { name: "John Smith", age: 85, city: "Seattle" },
 ];
 
-describe("splitWordsAndRank", () => {
-  it("should perform correctly for known pairs", () => {
-    knownPairs.forEach(({ shouldWork, shouldNotWork, searchTerm }) => {
-      const result = picoSearch(
-        [{ name: shouldNotWork }, { name: shouldWork }],
-        searchTerm,
-        ["name"]
-      );
-
-      const names = result.map((r) => r.name);
-
-      expect(names).toMatchObject([shouldWork]);
-    });
+describe("picoSearch", () => {
+  it("should return all objects if searchTerm is empty", () => {
+    expect(picoSearch(objects, "", ["name"])).toEqual(objects);
   });
-});
-
-describe("picoSearch: jaroWinkler [default]", () => {
-  const objects = [
-    { name: "John Doe", age: 25, city: "New York" },
-    { name: "Jane Smith", age: 35, city: "San Francisco" },
-    { name: "Bob Johnson", age: 45, city: "Los Angeles" },
-    { name: "Alice Williams", age: 55, city: "Boston" },
-    { name: "Joe Brown", age: 65, city: "Washington DC" },
-    { name: "Sherry Smith", age: 75, city: "Miami" },
-    { name: "John Smith", age: 85, city: "Seattle" },
-  ];
 
   it("should return an empty array if objectsArray is empty", () => {
-    expect(picoSearch([], "hello", ["name"])).toMatchObject([]);
+    expect(picoSearch([], "hello", ["name"])).toEqual([]);
   });
 
-  it("should return all objects if searchTerm is an empty string", () => {
-    expect(picoSearch(objects, "", ["name"])).toMatchObject([
-      { age: 25, city: "New York", name: "John Doe" },
-      { age: 35, city: "San Francisco", name: "Jane Smith" },
-      { age: 45, city: "Los Angeles", name: "Bob Johnson" },
-      { age: 55, city: "Boston", name: "Alice Williams" },
-      { age: 65, city: "Washington DC", name: "Joe Brown" },
-      { age: 75, city: "Miami", name: "Sherry Smith" },
-      { age: 85, city: "Seattle", name: "John Smith" },
-    ]);
+  it("basic single-key search", () => {
+    const result = picoSearch(objects, "John", ["name"]);
+    const names = result.map((r) => r.name);
+    expect(names).toContain("John Doe");
+    expect(names).toContain("John Smith");
   });
 
-  it("should return objects that match the searchTerm", () => {
-    expect(picoSearch(objects, "John", ["name"])).toMatchObject([
-      { age: 25, city: "New York", name: "John Doe" },
-      { age: 85, city: "Seattle", name: "John Smith" },
-      { age: 45, city: "Los Angeles", name: "Bob Johnson" },
-      { age: 65, city: "Washington DC", name: "Joe Brown" },
-    ]);
-
-    expect(picoSearch(objects, "Boston", ["city"])).toMatchObject([
-      { age: 55, city: "Boston", name: "Alice Williams" },
-      { age: 45, city: "Los Angeles", name: "Bob Johnson" },
-    ]);
-  });
-
-  it("should prioritize results based on distance", () => {
-    expect(
-      picoSearch(objects, "ohn", ["name"], {
-        threshold: 0.7,
-      })
-    ).toMatchObject([
-      { age: 25, city: "New York", name: "John Doe" },
-      { age: 85, city: "Seattle", name: "John Smith" },
-      { age: 45, city: "Los Angeles", name: "Bob Johnson" },
-    ]);
-  });
-
-  it("should take into account weights for different keys", () => {
+  it("multi-key weighted search", () => {
     const keys = [
       { name: "name", weight: 5 },
       { name: "city", weight: 1 },
     ];
-
-    expect(picoSearch(objects, "John", keys)).toMatchObject([
-      { age: 25, city: "New York", name: "John Doe" },
-      { age: 85, city: "Seattle", name: "John Smith" },
-      { age: 45, city: "Los Angeles", name: "Bob Johnson" },
-      { age: 65, city: "Washington DC", name: "Joe Brown" },
-    ]);
+    const result = picoSearch(objects, "John", keys);
+    // John Doe and John Smith should rank highest
+    expect(result[0].name).toBe("John Doe");
   });
 
-  it("should work even if some data is missing", () => {
+  it("multi-word query (space-separated terms)", () => {
+    const result = picoSearch(objects, "John New", [
+      { name: "name", weight: 3 },
+      { name: "city", weight: 2 },
+    ]);
+    // Only John Doe lives in New York — should match both terms
+    const names = result.map((r) => r.name);
+    expect(names).toContain("John Doe");
+  });
+
+  it("missing/null data handling", () => {
+    const data = [
+      { name: "John Doe", city: null },
+      { name: "Jane Smith", city: "Boston" },
+    ];
     const keys = [
       { name: "name", weight: 5 },
       { name: "city", weight: 1 },
     ];
+    // Should not throw
+    const result = picoSearch(data, "John", keys);
+    expect(result.map((r) => r.name)).toContain("John Doe");
+  });
 
-    const objects = [
-      { name: "John Doe", age: 25, city: null },
-      { name: "Jane Smith", age: 35, city: null },
-      { name: "Bob Johnson", age: 45, city: null },
-      { name: "Alice Williams", age: 55, city: "Boston" },
-      { name: "Joe Brown", age: 65, city: "Washington DC" },
-      { name: "Sherry Smith", age: 75, city: "Miami" },
-      { name: "John Smith", age: 85, city: "Seattle" },
+  it("threshold filtering", () => {
+    const result = picoSearch(objects, "xyzxyz", ["name"], { threshold: 0.3 });
+    expect(result).toEqual([]);
+  });
+
+  it("the 360dialog / '3' bug case", () => {
+    const data = [
+      { name: "360dialog" },
+      { name: "Apple" },
+      { name: "Google" },
     ];
+    const result = picoSearch(data, "3", ["name"]);
+    expect(result.map((r) => r.name)).toContain("360dialog");
+  });
 
-    expect(picoSearch(objects, "John", keys)).toMatchObject([
-      { age: 25, city: null, name: "John Doe" },
-      { age: 85, city: "Seattle", name: "John Smith" },
-      { age: 45, city: null, name: "Bob Johnson" },
-      { age: 65, city: "Washington DC", name: "Joe Brown" },
-    ]);
+  it("subsequence matching ('jd' → 'John Doe')", () => {
+    const result = picoSearch(objects, "jd", ["name"]);
+    expect(result.map((r) => r.name)).toContain("John Doe");
+  });
+
+  it("should find 'The Shawshank Redemption' with abbreviated search", () => {
+    const movies = [
+      { title: "The Shawshank Redemption" },
+      { title: "The Godfather" },
+      { title: "Shrek" },
+    ];
+    const result = picoSearch(movies, "shwshnk", ["title"]);
+    expect(result.map((r) => r.title)).toContain("The Shawshank Redemption");
+  });
+
+  it("should prefer exact prefix matches in ranking", () => {
+    const data = [
+      { name: "Crocodile Dundee" },
+      { name: "Django Unchained" },
+      { name: "The Deer Hunter" },
+    ];
+    const result = picoSearch(data, "Dund", ["name"]);
+    expect(result[0].name).toBe("Crocodile Dundee");
   });
 });

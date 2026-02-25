@@ -1,5 +1,5 @@
-import jaroWinkler from "./algorithms/jaroWinkler";
-import { clamp, weightedAverage, splitAndTrim } from "./utils";
+import fuzzyScore from "./algorithms/fuzzyScore";
+import { weightedAverage } from "./utils";
 
 interface SearchResult<T> {
   object: T;
@@ -8,12 +8,6 @@ interface SearchResult<T> {
 
 type KeyWithWeight = { name: string; weight: number };
 type Keys = Array<KeyWithWeight | string>;
-
-const BOOST_FACTOR = {
-  STARTS_WITH: 1.3,
-  CONTAINS_MATCH: 1.2,
-  FIRST_SIMILARITY: 1.1,
-};
 
 /**
  * Searches for objects in an array based on a search term and a set of keys.
@@ -27,98 +21,61 @@ export function picoSearch<T>(
   objectsArray: T[],
   searchTerm: string,
   keys: Keys,
-  config: { threshold: number },
+  config?: { threshold: number },
 ): T[] {
   if (!searchTerm || typeof searchTerm !== "string") {
     return objectsArray;
   }
 
   const results: SearchResult<T>[] = [];
-  const threshold = config?.threshold ?? 0.8;
-  const trimmedSearchTerm = searchTerm.trim().toLowerCase();
-  const splitSearchTerm = splitAndTrim(trimmedSearchTerm);
+  const threshold = config?.threshold ?? 0.3;
+  const trimmed = searchTerm.trim().toLowerCase();
+  const terms = trimmed.split(/\s+/).filter(Boolean);
+
+  // Normalize keys to { name, weight } form
+  const normalizedKeys = keys.map((k) =>
+    typeof k === "string" ? { name: k, weight: 1 } : k,
+  );
 
   objectsArray.forEach((obj) => {
-    const similarityScores: number[] = [];
-    const weightsInOrder: number[] = [];
-
-    keys.forEach((key) => {
-      let keyToCheck: string;
-      let weight = 1;
-
-      if (typeof key === "string") {
-        keyToCheck = key;
-      } else {
-        keyToCheck = key.name;
-        weight = key.weight;
-      }
-
-      weightsInOrder.push(weight);
-      const valueToSearch = (obj as any)[keyToCheck]?.trim().toLowerCase(); // skipcq: JS-0323
-
-      if (valueToSearch) {
-        const similarity =
-          valueToSearch === trimmedSearchTerm
-            ? 1
-            : splitWordsAndRank(valueToSearch, splitSearchTerm);
-        similarityScores.push(similarity);
-      } else {
-        similarityScores.push(0);
-      }
+    // Get string values for each key
+    const values = normalizedKeys.map((k) => {
+      const raw = (obj as any)[k.name]; // skipcq: JS-0323
+      return typeof raw === "string" ? raw.trim() : "";
     });
 
-    const similarityForObject = weightedAverage(
-      similarityScores,
-      weightsInOrder,
-    );
+    if (terms.length <= 1) {
+      // Single term: score each key, weighted average
+      const scores = values.map((v) => (v ? fuzzyScore(v, terms[0]) : 0));
+      const weights = normalizedKeys.map((k) => k.weight);
+      const similarity = weightedAverage(scores, weights);
 
-    if (similarityForObject >= threshold) {
-      results.push({ object: obj, similarity: similarityForObject });
+      if (similarity >= threshold) {
+        results.push({ object: obj, similarity });
+      }
+    } else {
+      // Multi-word: each term finds its best weighted score across keys.
+      // All terms must match somewhere (min across terms).
+      const termScores = terms.map((term) => {
+        let best = 0;
+        for (let i = 0; i < values.length; i++) {
+          if (values[i]) {
+            const s = fuzzyScore(values[i], term);
+            if (s > best) best = s;
+          }
+        }
+        return best;
+      });
+
+      const similarity = Math.min(...termScores);
+
+      if (similarity >= threshold) {
+        results.push({ object: obj, similarity });
+      }
     }
   });
 
   results.sort((a, b) => b.similarity - a.similarity);
 
-  return results.map((result) => result.object);
-}
-
-/**
- * Splits a string into words, removes duplicates and empty words, and calculates the similarity score for each word.
- * Returns the maximum similarity score, with a boost if the highest matching word shows up first.
- * @param {string} valueToSearch - The string to split into words and rank.
- * @param {string} searchTerm - The search term to match against the words.
- * @returns {number} The maximum similarity score, with a boost if the highest matching word shows up first.
- */
-function splitWordsAndRank(valueToSearch: string, splitSearchTerm: string[]) {
-  const splitSearchCandidate = splitAndTrim(valueToSearch);
-
-  const splitScores = splitSearchTerm.map((searchWord) => {
-    const similarityValues = splitSearchCandidate.map((word) =>
-      getScoreForWord(word, searchWord),
-    );
-
-    const maxSimilarity = Math.max(...similarityValues);
-
-    // boost score if the highest matching word shows up first
-    return maxSimilarity === similarityValues[0]
-      ? maxSimilarity * BOOST_FACTOR.FIRST_SIMILARITY
-      : clamp(maxSimilarity);
-  });
-
-  return weightedAverage(splitScores);
-}
-
-/**
- * Calculates the similarity score between a word and a search term using the Jaro-Winkler algorithm.
- * If the word includes the search term, the score is boosted by a factor.
- * @param {string} word - The word to compare to the search term.
- * @param {string} searchTerm - The search term to compare to the word.
- * @returns {number} The similarity score between the word and the search term, possibly boosted.
- */
-function getScoreForWord(word: string, searchTerm: string): number {
-  const jwScore = jaroWinkler(word, searchTerm);
-
-  if (word.startsWith(searchTerm)) return clamp(jwScore * BOOST_FACTOR.STARTS_WITH);
-  if (word.includes(searchTerm)) return clamp(jwScore * BOOST_FACTOR.CONTAINS_MATCH);
-  return jwScore;
+  return results.map((r) => r.object);
 }

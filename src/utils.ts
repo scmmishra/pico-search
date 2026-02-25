@@ -24,22 +24,3 @@ export function weightedAverage(values: number[], weights?: number[]): number {
   return sum / totalWeight;
 }
 
-/**
- * Clamps a number between a minimum and maximum value.
- * @param {number} value - The number to clamp.
- * @returns {number} The clamped value, which is between the minimum and maximum values.
- */
-export function clamp(value: number): number {
-  return Math.max(0, Math.min(1, value));
-}
-
-/**
- * Splits a string into words, removes duplicates and empty words.
- * @param {string } value - The string to split and trim.
- * @returns {string[]} Returns an array of words, with duplicates and empty strings removed.
- */
-export function splitAndTrim(value: string): string[] {
-  return value
-    .split(/\s+/) // split by one or more whitespace characters
-    .filter((word, index, words) => word && words.indexOf(word) === index); // remove empty strings and duplicates
-}
