@@ -101,3 +101,153 @@ describe("picoSearch", () => {
     expect(result[0].name).toBe("Crocodile Dundee");
   });
 });
+
+describe("picoSearch: label search", () => {
+  const items = [
+    { label: "360dialog" },
+    { label: "bot-attended" },
+    { label: "bot-unattended" },
+    { label: "hello-world" },
+    { label: "help-center" },
+    { label: "high-priority" },
+    { label: "customer-support" },
+    { label: "cust-success" },
+    { label: "auto-reply" },
+    { label: "auto-resolve" },
+    { label: "self-service" },
+    { label: "sla-breach" },
+    { label: "first-response" },
+    { label: "feature-request" },
+    { label: "bug-report" },
+    { label: "v2-migration" },
+    { label: "v2-beta" },
+    { label: "needs-triage" },
+    { label: "do-not-disturb" },
+    { label: "whatsapp-business" },
+  ];
+
+  const search = (term: string) => picoSearch(items, term, ["label"]);
+  const labels = (term: string) => search(term).map((r) => r.label);
+
+  // Numeric prefix
+  it("'3' finds '360dialog'", () => {
+    expect(labels("3")).toContain("360dialog");
+  });
+
+  it("'360' ranks '360dialog' first", () => {
+    expect(search("360")[0].label).toBe("360dialog");
+  });
+
+  // Exact segment match
+  it("'hello' finds 'hello-world'", () => {
+    expect(search("hello")[0].label).toBe("hello-world");
+  });
+
+  // Prefix ambiguity: "hel" matches hello-world and help-center
+  it("'hel' finds both 'hello-world' and 'help-center'", () => {
+    const r = labels("hel");
+    expect(r).toContain("hello-world");
+    expect(r).toContain("help-center");
+  });
+
+  // Disambiguating further
+  it("'help' ranks 'help-center' above 'hello-world'", () => {
+    expect(search("help")[0].label).toBe("help-center");
+  });
+
+  // Hyphenated exact
+  it("'bot-attended' ranks exact over 'bot-unattended'", () => {
+    expect(search("bot-attended")[0].label).toBe("bot-attended");
+  });
+
+  // Second segment search
+  it("'reply' finds 'auto-reply'", () => {
+    expect(labels("reply")).toContain("auto-reply");
+  });
+
+  // Subsequence across hyphen: "ar" → auto-reply (a...r)
+  it("'ar' finds 'auto-reply' and 'auto-resolve'", () => {
+    const r = labels("ar");
+    expect(r).toContain("auto-reply");
+    expect(r).toContain("auto-resolve");
+  });
+
+  // Contiguous mid-string
+  it("'breach' finds 'sla-breach'", () => {
+    expect(labels("breach")).toContain("sla-breach");
+  });
+
+  // Scattered subsequence: "cs" → customer-support, cust-success
+  it("'cs' finds 'customer-support' and 'cust-success'", () => {
+    const r = labels("cs");
+    expect(r).toContain("customer-support");
+    expect(r).toContain("cust-success");
+  });
+
+  // Short prefix on long label
+  it("'wha' finds 'whatsapp-business'", () => {
+    expect(search("wha")[0].label).toBe("whatsapp-business");
+  });
+
+  // Version prefix: "v2" matches both v2 labels
+  it("'v2' finds both 'v2-migration' and 'v2-beta'", () => {
+    const r = labels("v2");
+    expect(r).toContain("v2-migration");
+    expect(r).toContain("v2-beta");
+  });
+
+  // Disambiguate version labels
+  it("'v2b' finds 'v2-beta'", () => {
+    expect(labels("v2b")).toContain("v2-beta");
+  });
+
+  // Subsequence: "fr" → first-response, feature-request
+  it("'fr' finds 'first-response' and 'feature-request'", () => {
+    const r = labels("fr");
+    expect(r).toContain("first-response");
+    expect(r).toContain("feature-request");
+  });
+
+  // Full second segment
+  it("'request' finds 'feature-request'", () => {
+    expect(labels("request")).toContain("feature-request");
+  });
+
+  // "bug" is unambiguous
+  it("'bug' finds only 'bug-report'", () => {
+    const r = labels("bug");
+    expect(r).toEqual([{ label: "bug-report" }].map((x) => x.label));
+  });
+
+  // Tricky: "dnd" subsequence → do-not-disturb
+  it("'dnd' finds 'do-not-disturb'", () => {
+    expect(labels("dnd")).toContain("do-not-disturb");
+  });
+
+  // "self" as prefix of first segment
+  it("'self' finds 'self-service'", () => {
+    expect(search("self")[0].label).toBe("self-service");
+  });
+
+  // No match at all
+  it("'zzz' returns nothing", () => {
+    expect(search("zzz")).toEqual([]);
+  });
+
+  // Longer scattered subsequence: "ntriage" → needs-triage
+  it("'ntriage' finds 'needs-triage'", () => {
+    expect(labels("ntriage")).toContain("needs-triage");
+  });
+
+  // "hi" is short and ambiguous — should find high-priority
+  it("'hi' finds 'high-priority'", () => {
+    expect(labels("hi")).toContain("high-priority");
+  });
+
+  // Hyphen in search term treated as literal character
+  it("'auto-re' finds both 'auto-reply' and 'auto-resolve'", () => {
+    const r = labels("auto-re");
+    expect(r).toContain("auto-reply");
+    expect(r).toContain("auto-resolve");
+  });
+});
