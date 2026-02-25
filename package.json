@@ -1,7 +1,7 @@
 {
   "name": "@scmmishra/pico-search",
   "description": "A tiny fuzzy search engine",
-  "version": "0.5.4",
+  "version": "0.6.0",
   "license": "MIT",
   "homepage": "https://github.com/scmmishra/pico-search",
   "keywords": [
