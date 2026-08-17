@@ -23,13 +23,18 @@ export function picoSearch<T>(
   keys: Keys,
   config?: { threshold: number },
 ): T[] {
-  if (!searchTerm || typeof searchTerm !== "string") {
+  if (typeof searchTerm !== "string") {
+    return objectsArray;
+  }
+
+  const trimmed = searchTerm.trim().toLowerCase();
+
+  if (!trimmed) {
     return objectsArray;
   }
 
   const results: SearchResult<T>[] = [];
   const threshold = config?.threshold ?? 0.3;
-  const trimmed = searchTerm.trim().toLowerCase();
   const terms = trimmed.split(/\s+/).filter(Boolean);
 
   // Normalize keys to { name, weight } form

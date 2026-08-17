@@ -16,6 +16,10 @@ describe("picoSearch", () => {
     expect(picoSearch(objects, "", ["name"])).toEqual(objects);
   });
 
+  it("should return all objects if searchTerm contains only whitespace", () => {
+    expect(picoSearch(objects, "   ", ["name"])).toEqual(objects);
+  });
+
   it("should return an empty array if objectsArray is empty", () => {
     expect(picoSearch([], "hello", ["name"])).toEqual([]);
   });
