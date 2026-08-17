@@ -1,15 +1,18 @@
 {
-  "name": "@scmmishra/pico-search",
+  "name": "@chatwoot/pico-search",
   "description": "A tiny fuzzy search engine",
   "version": "0.6.0",
   "license": "MIT",
-  "homepage": "https://github.com/scmmishra/pico-search",
+  "homepage": "https://github.com/chatwoot/pico-search",
   "keywords": [
     "fuzzy search",
     "pico-search"
   ],
-  "repository": "https://github.com/scmmishra/pico-search",
-  "bugs": "https://github.com/scmmishra/pico-search/issues",
+  "repository": "https://github.com/chatwoot/pico-search",
+  "bugs": "https://github.com/chatwoot/pico-search/issues",
+  "publishConfig": {
+    "access": "public"
+  },
   "exports": {
     ".": {
       "require": {

@@ -8,7 +8,7 @@
 <br>
 <br>
 
-![npm](https://img.shields.io/npm/dm/%40scmmishra%2Fpico-search)
+![npm](https://img.shields.io/npm/dm/%40chatwoot%2Fpico-search)
 
 </div>
 
@@ -19,23 +19,23 @@ PicoSearch is a lightweight fuzzy search JavaScript library that provides develo
 ## Installation
 
 ```sh
-pnpm install @scmmishra/pico-search
+pnpm install @chatwoot/pico-search
 ```
 
 ```sh
-npm install @scmmishra/pico-search
+npm install @chatwoot/pico-search
 ```
 
 ```sh
-yarn add @scmmishra/pico-search
+yarn add @chatwoot/pico-search
 ```
 
 ## Usage
 
-PicoSearch exposes a single function: `picoSearch()`. This function takes an array of objects, a search term, an array of keys to search against, and an optional config argument. It returns an array of objects that match the search term, ranked by relevance. You can find the [typedoc here](https://paka.dev/npm/@scmmishra/pico-search/api)
+PicoSearch exposes a single function: `picoSearch()`. This function takes an array of objects, a search term, an array of keys to search against, and an optional config argument. It returns an array of objects that match the search term, ranked by relevance.
 
 ```typescript
-import { picoSearch } from "@scmmishra/pico-search";
+import { picoSearch } from "@chatwoot/pico-search";
 
 interface Person {
   name: string;
